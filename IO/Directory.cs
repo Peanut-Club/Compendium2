@@ -10,5 +10,13 @@ namespace Compendium.IO
         }
 
         public DirectoryInfo Info { get; }
+
+        public Directory CheckExistance()
+        {
+            if (Info.Exists)
+                Info.Create();
+
+            return this;
+        }
     }
 }

@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Compendium.Configuration
+namespace Compendium.Utilities.Reflection
 {
-    public class ConfigurationFile
+    public static class AssemblyUtilities
     {
+
     }
 }

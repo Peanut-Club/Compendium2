@@ -1,5 +1,7 @@
 ﻿using Compendium.Logging;
 
+using HarmonyLib;
+using MonoMod.Utils;
 using System;
 using System.Reflection;
 
@@ -11,6 +13,85 @@ namespace Compendium.Utilities.Reflection
 
         public static MethodInfo[] GetAllMethods(this Type type)
             => type.GetMethods(BindingFlags);
+
+        public static object SafeCall(this FastReflectionHelper.FastInvoker fastInvokeHandler, object target, object[] args)
+        {
+            if (fastInvokeHandler is null)
+                return null;
+
+            try
+            {
+                return fastInvokeHandler(target, args);
+            }
+            catch (Exception ex)
+            {
+                Log.Critical($"Failed to call fast invocation handler '{fastInvokeHandler.Method.ToName()}' due to an exception", ex);
+            }
+
+            return null;
+        }
+
+        public static object SafeCall(this FastInvokeHandler fastInvokeHandler, object target, object[] args)
+        {
+            if (fastInvokeHandler is null)
+                return null;
+
+            try
+            {
+                return fastInvokeHandler(target, args);
+            }
+            catch (Exception ex)
+            {
+                Log.Critical($"Failed to call fast invocation handler '{fastInvokeHandler.Method.ToName()}' due to an exception", ex);
+            }
+
+            return null;
+        }
+
+        public static void SafeCall<T1, T2>(this Action<T1, T2> action, T1 t1, T2 t2)
+        {
+            if (action is null)
+                return;
+
+            try
+            {
+                action(t1, t2);
+            }
+            catch (Exception ex)
+            {
+                Log.Critical($"Failed to call action '{action.Method.ToName()}' due to an exception", ex);
+            }
+        }
+
+        public static void SafeCall<T1, T2, T3>(this Action<T1, T2, T3> action, T1 t1, T2 t2, T3 t3)
+        {
+            if (action is null)
+                return;
+
+            try
+            {
+                action(t1, t2, t3);
+            }
+            catch (Exception ex)
+            {
+                Log.Critical($"Failed to call action '{action.Method.ToName()}' due to an exception", ex);
+            }
+        }
+
+        public static void SafeCall(this Action action)
+        {
+            if (action is null)
+                return;
+
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                Log.Critical($"Failed to call action '{action.Method.ToName()}' due to an exception", ex);
+            }
+        }
 
         public static void SafeCall<TValue>(this Action<TValue> action, TValue value)
         {

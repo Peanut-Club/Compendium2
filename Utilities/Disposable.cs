@@ -5,6 +5,7 @@ namespace Compendium.Utilities
     public class Disposable : IDisposable
     {
         public bool IsDisposed { get; private set; }
+        public bool IsDisposing { get; private set; }
 
         public virtual void DisposeInternal() { }
 
@@ -12,7 +13,11 @@ namespace Compendium.Utilities
         {
             if (!IsDisposed)
             {
+                IsDisposing = true;
+
                 DisposeInternal();
+
+                IsDisposing = false;
                 IsDisposed = true;
             }
 

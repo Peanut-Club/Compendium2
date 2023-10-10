@@ -6,43 +6,44 @@ using System.Reflection;
 
 namespace Compendium.Patching
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class PatchAttribute : ResolveableAttribute<PatchAttribute>
     {
-        public MethodInfo Target { get; }
-        public MethodInfo Replacement { get; private set; }
+        private MethodInfo target;
+        private PatchFlags flags;
 
-        public MethodInfo Patch { get; internal set; }
+        internal Type eventType;
 
-        public PatchTiming Timing { get; } = PatchTiming.BeforeExecution;
-        public PatchType Type { get; } = PatchType.Method;
+        public PatchInfo Info { get; private set; }
 
-        public PatchAttribute(Type type, string name, PatchTiming timing = PatchTiming.BeforeExecution, PatchType patchType = PatchType.Method)
+        public PatchAttribute(MethodInfo target, PatchFlags flags)
         {
-            Target = type.Method(name);
-
-            Timing = timing;
-            Type = patchType;
-
-            if (Target is null)
-                throw new MissingMethodException($"Failed to find a method of name '{name}' in type '{type.FullName}'");
+            this.target = target;
+            this.flags = flags;
         }
 
-        public PatchAttribute(PatchTargetInfo info, PatchTiming timing = PatchTiming.BeforeExecution, PatchType type = PatchType.Method)
+        public PatchAttribute(MethodInfo target, PatchFlags flags, Type eventType)
         {
-            Target = info.Resolve(true);
-
-            if (Target is null)
-                throw new MissingMethodException($"Failed to find a method of name '{info.TargetName}' in type '{info.TargetType.FullName}'");
-
-            Timing = timing;
-            Type = type;
+            this.target = target;
+            this.flags = flags;
+            this.eventType = eventType;
         }
+
+        public PatchAttribute(Type type, string name, PatchFlags flags) : this(type.Method(name), flags) { }
+        public PatchAttribute(Type type, string name, PatchFlags flags, params Type[] overload) : this(type.Method(name, overload), flags) { }
+        public PatchAttribute(Type type, string name, Type genericType, PatchFlags flags, params Type[] overload) : this(type.Method(name, genericType, overload), flags) { }
 
         public override void OnResolved(AttributeInfo<PatchAttribute> attributeInfo)
         {
             base.OnResolved(attributeInfo);
-            Replacement = attributeInfo.Method;
+
+            if (attributeInfo.Location != AttributeLocation.Method || attributeInfo.Method is null)
+                return;
+
+            if (target is null)
+                throw new InvalidOperationException($"Attribute is not valid on method '{attributeInfo.Method.ToName()}'");
+
+            Info = new PatchInfo(Patcher.Instance, $"{target.ToName()} -> {attributeInfo.Method.ToName()} ({flags})", flags, target, attributeInfo.Method);
         }
     }
 }

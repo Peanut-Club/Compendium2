@@ -1,10 +1,11 @@
 ﻿using Compendium.Utilities;
+
 using MonoMod.Core;
 
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Compendium.Patching
+namespace Compendium.Patching.Detours
 {
     public class DetourHandler : Disposable
     {

@@ -3,172 +3,83 @@ using Compendium.Callbacks;
 using Compendium.Events;
 using Compendium.Extensions;
 using Compendium.Logging;
-using Compendium.Logging.Streams.Console;
-using Compendium.Logging.Streams.File;
-using Compendium.Logging.Streams.Unity;
-using Compendium.Utilities.Reflection;
 
 using HarmonyLib;
 
+using MonoMod.Utils;
+
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Compendium.Patching
 {
     public static class Patcher
     {
+        private static List<PatchInfo> _patches = new List<PatchInfo>();
+
         public static Harmony Instance { get; private set; } = new Harmony($"com.compendium.patcher.{DateTime.Now.Ticks}");
         public static Log Logger { get; private set; } = new Log(20, 30, 15, LogTypes.LowDebugging, LogFormatting.Source | LogFormatting.Message, "Patcher");
 
-        [LoadCallback(Priority = Enums.Priority.High)]
+        [LoadCallback(Priority = Enums.Priority.Low)]
         private static void Load()
-        {
-            Logger.AddStream<ConsoleStream>();
-            Logger.AddStream<UnityStream>();
-
-            Logger.AddStream(new FileLogStream(FileLogStreamMode.Interval, $"", 1500));
-
-            AttributeResolver<PatchAttribute>.OnResolved += OnPatchAttributeResolved;
-            AttributeResolver<PatchAttribute>.OnRemoved += OnPatchAttributeRemoved;
-
-            AttributeResolver<EventPatchAttribute>.OnResolved += OnEventPatchAttributeResolved;
-            AttributeResolver<EventPatchAttribute>.OnRemoved += OnEventPatchAttributeRemoved;
-
-            Logger.Info("Initialized.");
-        }
+            => ApplyPatches(Assembly.GetExecutingAssembly());
 
         [UnloadCallback(Priority = Enums.Priority.Low)]
         private static void Unload()
         {
-            AttributeResolver<PatchAttribute>.OnResolved -= OnPatchAttributeResolved;
-            AttributeResolver<PatchAttribute>.OnRemoved -= OnPatchAttributeRemoved;
-
-            AttributeResolver<EventPatchAttribute>.OnResolved -= OnEventPatchAttributeResolved;
-            AttributeResolver<EventPatchAttribute>.OnRemoved -= OnEventPatchAttributeRemoved;
-
-            Logger.Info("Unloaded.");
-
-            Logger.Dispose();
+            Logger?.Dispose();
             Logger = null;
 
             Instance.UnpatchSelf();
             Instance = null;
         }
 
-        public static void Unpatch(MethodBase target, MethodInfo patch)
-            => Instance.Unpatch(target, patch);
-
-        public static MethodInfo Patch(MethodBase target, Delegate replacement, PatchTiming timing, PatchType type)
-            => Patch(target, replacement.GetMethodInfo(), timing, type);
-
-        public static MethodInfo Patch(MethodBase target, MethodInfo replacement, PatchTiming timing, PatchType type)
+        public static void RemovePatches(Assembly assembly)
         {
-            try
+            for (int i = 0; i < _patches.Count; i++)
             {
-                switch (type)
+                if (_patches[i].Method.DeclaringType.Assembly == assembly)
+                    _patches[i].Unapply();
+            }
+
+            _patches.RemoveAll(p => p.Method.DeclaringType.Assembly == assembly);
+        }
+
+        public static void ApplyPatches(Assembly assembly)
+        {
+            var types = assembly.GetTypes();
+
+            for (int i = 0; i < types.Length; i++)
+            {
+                var attributes = AttributeResolver<PatchAttribute>.ResolveAttributes(types[i], null, AttributeResolveFlags.Method);
+
+                if (attributes is null || attributes.Count < 1)
+                    continue;
+
+                foreach (var attr in attributes)
                 {
-                    case PatchType.Method:
-                    case PatchType.Setter:
-                    case PatchType.Getter:
-                        {
-                            switch (timing)
-                            {
-                                case PatchTiming.AfterExecution:
-                                    return Instance.Patch(target, null, new HarmonyMethod(replacement), null, null, null);
+                    if (attr.Attribute.Info is null)
+                        continue;
 
-                                case PatchTiming.BeforeExecution:
-                                    return Instance.Patch(target, new HarmonyMethod(replacement), null, null, null, null);
-                            }
+                    if (_patches.Any(p => p.Method == attr.Attribute.Info.Method && p.Target == attr.Attribute.Info.Target))
+                        continue;
 
-                            break;
-                        }
+                    _patches.Add(attr.Attribute.Info);
 
-                    case PatchType.Finalizer:
-                        return Instance.Patch(target, null, null, null, new HarmonyMethod(replacement), null);
+                    Logger.Debug($"Found patch: '{attr.Attribute.Info.Name}'");
 
-                    case PatchType.Transpiler:
-                        return Instance.Patch(target, null, null, new HarmonyMethod(replacement), null, null);
-
-                    case PatchType.IL:
-                        return Instance.Patch(target, null, null, null, null, new HarmonyMethod(replacement));
+                    if (attr.Attribute.Info.Flags.Has(PatchFlags.IsEvent)
+                        && attr.Attribute.eventType != null)
+                    {
+                        if (EventManager.IsAny(attr.Attribute.eventType))
+                            attr.Attribute.Info.Apply();
+                    }
+                    else
+                        attr.Attribute.Info.Apply();
                 }
             }
-            catch (Exception ex)
-            {
-                Logger.Error($"Failed to patch '{target.ToName()}' with '{replacement.ToName()}' due to an exception", ex);
-            }
-
-            return null;
-        }
-
-        private static void OnEventPatchAttributeResolved(AttributeInfo<EventPatchAttribute> attributeInfo)
-        {
-            if (!EventManager.IsActive(attributeInfo.Attribute.EventType))
-                return;
-
-            if (attributeInfo.Location != AttributeLocation.Method)
-                return;
-
-            if (attributeInfo.Attribute.Replacement is null)
-                return;
-
-            if (attributeInfo.Attribute.Patch != null)
-                return;
-
-            attributeInfo.Attribute.Patch = Patch(attributeInfo.Attribute.Target, attributeInfo.Attribute.Replacement, attributeInfo.Attribute.Timing, attributeInfo.Attribute.Type);
-
-            if (attributeInfo.Attribute.Patch != null)
-                Logger.Debug($"Patched event method '{attributeInfo.Attribute.Target.ToName()}' by '{attributeInfo.Attribute.Replacement.ToName()}'");
-        }
-
-        private static void OnEventPatchAttributeRemoved(AttributeInfo<EventPatchAttribute> attributeInfo)
-        {
-            if (EventManager.IsActive(attributeInfo.Attribute.EventType))
-                return;
-
-            if (attributeInfo.Location != AttributeLocation.Method)
-                return;
-
-            if (attributeInfo.Attribute.Patch is null)
-                return;
-
-            Unpatch(attributeInfo.Attribute.Target, attributeInfo.Attribute.Patch);
-
-            Logger.Debug($"Unpatched event method '{attributeInfo.Attribute.Target.ToName()}' (patch: '{attributeInfo.Attribute.Replacement.ToName()}')");
-
-            attributeInfo.Attribute.Patch = null;
-        }
-
-        private static void OnPatchAttributeResolved(AttributeInfo<PatchAttribute> attributeInfo)
-        {
-            if (attributeInfo.Location != AttributeLocation.Method)
-                return;
-
-            if (attributeInfo.Attribute.Replacement is null)
-                return;
-
-            if (attributeInfo.Attribute.Patch != null)
-                return;
-
-            attributeInfo.Attribute.Patch = Patch(attributeInfo.Attribute.Target, attributeInfo.Attribute.Replacement, attributeInfo.Attribute.Timing, attributeInfo.Attribute.Type);
-
-            if (attributeInfo.Attribute.Patch != null)
-                Logger.Debug($"Patched method '{attributeInfo.Attribute.Target.ToName()}' by '{attributeInfo.Attribute.Replacement.ToName()}'");
-        }
-
-        private static void OnPatchAttributeRemoved(AttributeInfo<PatchAttribute> attributeInfo)
-        {
-            if (attributeInfo.Location != AttributeLocation.Method)
-                return;
-
-            if (attributeInfo.Attribute.Patch is null)
-                return;
-
-            Unpatch(attributeInfo.Attribute.Target, attributeInfo.Attribute.Patch);
-
-            Logger.Debug($"Unpatched method '{attributeInfo.Attribute.Target.ToName()}' (patch: '{attributeInfo.Attribute.Replacement.ToName()}')");
-
-            attributeInfo.Attribute.Patch = null;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Compendium.Extensions;
+
 using System;
 using System.Linq;
 using System.Reflection;
@@ -38,6 +39,9 @@ namespace Compendium.Utilities.Reflection
             return null;
         }
 
+        public static ConstructorInfo[] GetAllConstructors(this Type type)
+            => type.GetConstructors(MethodUtilities.BindingFlags);
+
         public static Type GetFirstGenericType(this Type type)
         {
             if (type is null)
@@ -49,6 +53,39 @@ namespace Compendium.Utilities.Reflection
                 throw new InvalidOperationException($"Attempted to get generic arguments of a type that does not have any.");
 
             return genericArguments[0];
+        }
+
+        public static bool IsStatic(this Type type)
+            => type.IsSealed && type.IsAbstract;
+
+        public static bool InheritsType<TType>(this Type type)
+            => type.InheritsType(typeof(TType));
+
+        public static bool InheritsType(this Type type, Type inherit)
+        {
+            if (type is null)
+                throw new ArgumentNullException(nameof(type));
+
+            if (inherit is null)
+                throw new ArgumentNullException(nameof(inherit));
+
+            if (type.BaseType is null)
+                return false;
+
+            if (type.BaseType == inherit)
+                return true;
+
+            var baseType = type.BaseType;
+
+            while (baseType != null)
+            {
+                if (baseType == inherit)
+                    return true;
+
+                baseType = baseType.BaseType;
+            }
+
+            return false;
         }
     }
 }

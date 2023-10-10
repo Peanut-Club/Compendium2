@@ -92,20 +92,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assemblies\AssemblyDependencyInfo.cs" />
+    <Compile Include="Assemblies\AssemblyInfo.cs" />
     <Compile Include="Assemblies\AssemblyManager.cs" />
+    <Compile Include="Assemblies\AssemblyResolveFlags.cs" />
     <Compile Include="Attributes\AttributeInfo.cs" />
     <Compile Include="Attributes\AttributeLocation.cs" />
+    <Compile Include="Attributes\AttributeResolveFlags.cs" />
     <Compile Include="Attributes\AttributeResolver.cs" />
     <Compile Include="Attributes\ResolveableAttribute.cs" />
     <Compile Include="Callbacks\CallbackAttribute.cs" />
     <Compile Include="Callbacks\LoadCallbackAttribute.cs" />
     <Compile Include="Callbacks\ReloadCallbackAttribute.cs" />
     <Compile Include="Callbacks\UnloadCallbackAttribute.cs" />
-    <Compile Include="Configuration\ConfigurationFile.cs" />
+    <Compile Include="Components\BlankComponent.cs" />
+    <Compile Include="Components\Component.cs" />
+    <Compile Include="Components\Updates\UpdateComponent.cs" />
+    <Compile Include="Components\Updates\UpdateConfiguration.cs" />
+    <Compile Include="Components\Updates\UpdateInfo.cs" />
     <Compile Include="Enums\Priority.cs" />
-    <Compile Include="Events\EventHandlerInfo.cs" />
+    <Compile Include="Events\CancellableEventInfo.cs" />
+    <Compile Include="Events\EventAttribute.cs" />
+    <Compile Include="Events\EventData.cs" />
+    <Compile Include="Events\EventHandlers.cs" />
+    <Compile Include="Events\EventInfo.cs" />
     <Compile Include="Events\EventManager.cs" />
-    <Compile Include="Events\EventPatchAttribute.cs" />
+    <Compile Include="IO\Paths.cs" />
+    <Compile Include="IO\PathType.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\DetourExtensions.cs" />
     <Compile Include="Extensions\LogExtensions.cs" />
@@ -127,15 +140,24 @@
     <Compile Include="Logging\Streams\File\FileLogStreamMode.cs" />
     <Compile Include="Logging\Streams\Unity\UnityStream.cs" />
     <Compile Include="Packaging\Packager.cs" />
-    <Compile Include="Patching\DetourHandler.cs" />
+    <Compile Include="Patching\Detours\DetourHandler.cs" />
     <Compile Include="Patching\PatchAttribute.cs" />
+    <Compile Include="Patching\Patches.cs" />
+    <Compile Include="Patching\PatchInfo.cs" />
     <Compile Include="Patching\Patcher.cs" />
-    <Compile Include="Patching\PatchMemberType.cs" />
-    <Compile Include="Patching\PatchTargetInfo.cs" />
-    <Compile Include="Patching\PatchTiming.cs" />
-    <Compile Include="Patching\PatchType.cs" />
-    <Compile Include="Patching\PropertyPatch.cs" />
+    <Compile Include="Patching\PatchFlags.cs" />
+    <Compile Include="Utilities\Patches\PropertyPatch.cs" />
+    <Compile Include="Plugins\Configuration\ConfigurationAttribute.cs" />
+    <Compile Include="Plugins\Configuration\ConfigurationFile.cs" />
+    <Compile Include="Plugins\Configuration\ConfigurationFlags.cs" />
+    <Compile Include="Plugins\Configuration\ConfigurationHandler.cs" />
+    <Compile Include="Plugins\Configuration\ConfigurationOptions.cs" />
+    <Compile Include="Plugins\Plugin.cs" />
+    <Compile Include="Plugins\PluginAttribute.cs" />
+    <Compile Include="Plugins\PluginInfo.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
+    <Compile Include="Plugins\PluginOptions.cs" />
+    <Compile Include="Plugins\PluginState.cs" />
     <Compile Include="Pooling\Exceptions\ConstructorFailedException.cs" />
     <Compile Include="Pooling\Exceptions\EmptyPoolException.cs" />
     <Compile Include="Pooling\Exceptions\ItemAlreadyReturnedException.cs" />
@@ -152,9 +174,16 @@
     <Compile Include="Pooling\Pools\ListPool.cs" />
     <Compile Include="Pooling\Pools\StringBuilderPool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Time\Delay.cs" />
+    <Compile Include="Utilities\ArrayUtils.cs" />
+    <Compile Include="Utilities\Instances\InstanceAttribute.cs" />
+    <Compile Include="Utilities\Instances\InstanceCreator.cs" />
+    <Compile Include="Utilities\Instances\InstanceTracker.cs" />
+    <Compile Include="Utilities\Reflection\AssemblyUtilities.cs" />
+    <Compile Include="Utilities\Time\Delay.cs" />
+    <Compile Include="Utilities\Reflection\CallStats.cs" />
     <Compile Include="Utilities\RandomGeneration.cs" />
     <Compile Include="Utilities\Disposable.cs" />
+    <Compile Include="Utilities\Reflection\EventUtilities.cs" />
     <Compile Include="Utilities\Reflection\FieldUtilities.cs" />
     <Compile Include="Utilities\Reflection\MemberUtilities.cs" />
     <Compile Include="Utilities\Reflection\MethodUtilities.cs" />
@@ -165,6 +194,18 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Events\Data\Items\" />
+    <Folder Include="Events\Data\Map\" />
+    <Folder Include="Events\Data\Player\" />
+    <Folder Include="Events\Data\Round\" />
+    <Folder Include="Events\Data\Server\" />
+    <Folder Include="Events\Info\Items\" />
+    <Folder Include="Events\Info\Map\" />
+    <Folder Include="Events\Info\Player\" />
+    <Folder Include="Events\Info\Round\" />
+    <Folder Include="Events\Info\Server\" />
+    <Folder Include="Patching\Patches\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

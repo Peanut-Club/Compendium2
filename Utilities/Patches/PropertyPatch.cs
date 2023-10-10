@@ -1,8 +1,9 @@
 ﻿using Compendium.Extensions;
+using Compendium.Patching.Detours;
 
 using System.Reflection;
 
-namespace Compendium.Patching
+namespace Compendium.Utilities.Patches
 {
     public class PropertyPatch
     {

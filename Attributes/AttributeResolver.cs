@@ -1,6 +1,6 @@
 ﻿using Compendium.Pooling.Pools;
 using Compendium.Utilities.Reflection;
-
+using MonoMod.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,36 +38,54 @@ namespace Compendium.Attributes
             ListPool<AttributeInfo<TAttribute>>.Shared.Return(list);
         }
 
-        public static void ResolveAttributes(Type type, object handle = null)
+        public static List<AttributeInfo<TAttribute>> ResolveAttributes(Type type, object handle = null, AttributeResolveFlags attributeResolveFlags = AttributeResolveFlags.Field | AttributeResolveFlags.Property | AttributeResolveFlags.Method | AttributeResolveFlags.Type)
         {
-            var methods = type.GetAllMethods();
-            var fields = type.GetAllFields();
-            var properties = type.GetAllProperties();
+            var list = new List<AttributeInfo<TAttribute>>();
 
-            if (type.HasAttribute<TAttribute>(out var typeAttribute))
-                ResolveAttribute(new AttributeInfo<TAttribute>(type, typeAttribute));
+            if (attributeResolveFlags.Has(AttributeResolveFlags.Type) && type.HasAttribute<TAttribute>(out var typeAttribute))
+                ResolveAttribute(new AttributeInfo<TAttribute>(type, typeAttribute), list);
 
-            for (int i = 0; i < methods.Length; i++)
+            if (attributeResolveFlags.Has(AttributeResolveFlags.Method))
             {
-                if (methods[i].HasAttribute<TAttribute>(out var methodAttribute))
-                    ResolveAttribute(new AttributeInfo<TAttribute>(methods[i], methodAttribute, handle));
+                var methods = type.GetAllMethods();
+
+                for (int i = 0; i < methods.Length; i++)
+                {
+                    if (methods[i].HasAttribute<TAttribute>(out var methodAttribute))
+                        ResolveAttribute(new AttributeInfo<TAttribute>(methods[i], methodAttribute, handle), list);
+                }
             }
 
-            for (int i = 0; i < fields.Length; i++)
+            if (attributeResolveFlags.Has(AttributeResolveFlags.Field))
             {
-                if (fields[i].HasAttribute<TAttribute>(out var fieldAttribute))
-                    ResolveAttribute(new AttributeInfo<TAttribute>(fields[i], fieldAttribute, handle));
+                var fields = type.GetAllFields();
+
+                for (int i = 0; i < fields.Length; i++)
+                {
+                    if (fields[i].HasAttribute<TAttribute>(out var fieldAttribute))
+                        ResolveAttribute(new AttributeInfo<TAttribute>(fields[i], fieldAttribute, handle), list);
+                }
             }
 
-            for (int i = 0; i < properties.Length; i++)
+
+            if (attributeResolveFlags.Has(AttributeResolveFlags.Property))
             {
-                if (properties[i].HasAttribute<TAttribute>(out var propertyAttribute))
-                    ResolveAttribute(new AttributeInfo<TAttribute>(properties[i], propertyAttribute, handle));
+                var properties = type.GetAllProperties();
+
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    if (properties[i].HasAttribute<TAttribute>(out var propertyAttribute))
+                        ResolveAttribute(new AttributeInfo<TAttribute>(properties[i], propertyAttribute, handle), list);
+                }
             }
+
+            return list;
         }
 
-        public static void ResolveAttribute(AttributeInfo<TAttribute> attribute)
+        public static void ResolveAttribute(AttributeInfo<TAttribute> attribute, List<AttributeInfo<TAttribute>> list)
         {
+            list?.Add(attribute);
+
             if (_attributes.Any(a => a.Equals(attribute)))
                 return;
 
@@ -78,8 +96,7 @@ namespace Compendium.Attributes
             }    
 
             _attributes.Add(attribute);
-
-            OnResolved?.Invoke(attribute);
+            OnResolved.SafeCall(attribute);
         }
 
         public static void RemoveAttributes(Type type, object handle = null)
