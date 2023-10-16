@@ -1,4 +1,6 @@
-﻿namespace Compendium.Logging
+﻿using Compendium.Logging.Formatting;
+
+namespace Compendium.Logging
 {
     public static class LogTypes
     {

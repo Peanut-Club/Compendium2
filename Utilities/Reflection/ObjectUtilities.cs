@@ -17,15 +17,5 @@ namespace Compendium.Utilities.Reflection
 
             return instanceOne.Equals(instanceTwo);
         }
-
-        public static Type GetGenericType(this object obj)
-        {
-            if (obj is null)
-                throw new ArgumentNullException(nameof(obj));
-
-            var type = obj.GetType();
-
-            return type.GetFirstGenericType();
-        }
     }
 }

@@ -1,12 +1,16 @@
 ﻿using HarmonyLib;
 
 using System;
+using System.Collections;
 using System.Linq;
 
 namespace Compendium.Utilities
 {
     public static class ArrayUtils
     {
+        public static TValue[] CastArray<TValue>(this IEnumerable objects)
+            => objects.Cast<TValue>().ToArray();
+
         public static void Add<TValue>(ref TValue[] array, TValue value)
         {
             if (array is null)

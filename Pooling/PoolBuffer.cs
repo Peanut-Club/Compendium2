@@ -58,7 +58,8 @@ namespace Compendium.Pooling
                 if (predicate != null && predicate.SafeCall(item))
                     return item;
 
-                return item;
+                if (predicate is null)
+                    return item;
             }
 
             throw new NoMatchingItemsInPoolException();

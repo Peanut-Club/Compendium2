@@ -6,19 +6,11 @@ namespace Compendium.Events
 {
     public class EventData
     {
-        private static System.Reflection.EventInfo[] _handlersEventsValue;
+        public Type Type { get; set; }   
+        public Delegate Delegate { get; set; }
+        public System.Reflection.EventInfo Event { get; set; }
 
-        public static System.Reflection.EventInfo[] Events { get => _handlersEventsValue ??= typeof(Handlers).GetAllEvents(); }
-
-        public virtual Type Type { get; set; }   
-        public virtual System.Reflection.EventInfo Event { get; set; }
-
-        public virtual CallStats<EventData> Stats { get; private set; }
-
-        public EventData(Type eventType)
-            => Initialize(eventType);
-
-        public virtual void Initialize(Type eventType)
+        public EventData(Type eventType, System.Reflection.EventInfo eventInfo)
         {
             if (eventType is null)
                 throw new ArgumentNullException(nameof(eventType));
@@ -26,21 +18,12 @@ namespace Compendium.Events
             eventType.VerifyEventType();
 
             Type = eventType;
+            Event = eventInfo;
 
-            for (int i = 0; i < Events.Length; i++)
-            {
-                var evType = Events[i].EventHandlerType.GetGenericType();
+            Delegate = Event.DeclaringType.GetField(Event.Name).GetValue(null) as Delegate;
 
-                if (evType is null || evType != eventType)
-                    continue;
-
-                Event = Events[i];
-            }
-
-            if (Event is null)
+            if (Event is null || Delegate is null)
                 throw new ArgumentException($"Failed to find a handler corresponding to the event specified as 'eventType'.");
-
-            Stats = CallStats<EventData>.Create(this);
         }
 
         public virtual void AddHandler(Delegate del)
@@ -53,6 +36,7 @@ namespace Compendium.Events
 
             try { Event.RemoveEventHandler(del.Target, del); } catch { }
             try { Event.AddEventHandler(del.Target, del); } catch { }
+            try { Delegate = Event.DeclaringType.GetField(Event.Name).GetValue(null) as Delegate; } catch { }
         }
 
         public virtual void RemoveHandler(Delegate del)
@@ -64,6 +48,7 @@ namespace Compendium.Events
                 throw new InvalidOperationException($"This event is either not initialized or failed to initialize.");
 
             try { Event.RemoveEventHandler(del.Target, del); } catch { }
+            try { Delegate = Event.DeclaringType.GetField(Event.Name).GetValue(null) as Delegate; } catch { }
         }
     }
 }

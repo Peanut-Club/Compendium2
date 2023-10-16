@@ -3,6 +3,7 @@ using Compendium.Callbacks;
 using Compendium.Events;
 using Compendium.Extensions;
 using Compendium.Logging;
+using Compendium.Logging.Formatting;
 
 using HarmonyLib;
 
@@ -21,10 +22,6 @@ namespace Compendium.Patching
 
         public static Harmony Instance { get; private set; } = new Harmony($"com.compendium.patcher.{DateTime.Now.Ticks}");
         public static Log Logger { get; private set; } = new Log(20, 30, 15, LogTypes.LowDebugging, LogFormatting.Source | LogFormatting.Message, "Patcher");
-
-        [LoadCallback(Priority = Enums.Priority.Low)]
-        private static void Load()
-            => ApplyPatches(Assembly.GetExecutingAssembly());
 
         [UnloadCallback(Priority = Enums.Priority.Low)]
         private static void Unload()

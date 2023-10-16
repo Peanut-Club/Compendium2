@@ -92,10 +92,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assemblies\AssemblyDependencyInfo.cs" />
-    <Compile Include="Assemblies\AssemblyInfo.cs" />
-    <Compile Include="Assemblies\AssemblyManager.cs" />
-    <Compile Include="Assemblies\AssemblyResolveFlags.cs" />
     <Compile Include="Attributes\AttributeInfo.cs" />
     <Compile Include="Attributes\AttributeLocation.cs" />
     <Compile Include="Attributes\AttributeResolveFlags.cs" />
@@ -105,13 +101,12 @@
     <Compile Include="Callbacks\LoadCallbackAttribute.cs" />
     <Compile Include="Callbacks\ReloadCallbackAttribute.cs" />
     <Compile Include="Callbacks\UnloadCallbackAttribute.cs" />
-    <Compile Include="Components\BlankComponent.cs" />
-    <Compile Include="Components\Component.cs" />
-    <Compile Include="Components\Updates\UpdateComponent.cs" />
-    <Compile Include="Components\Updates\UpdateConfiguration.cs" />
-    <Compile Include="Components\Updates\UpdateInfo.cs" />
+    <Compile Include="Configuration\ConfigurationCallbackPair.cs" />
+    <Compile Include="Configuration\ConfigurationData.cs" />
+    <Compile Include="Configuration\ConfigurationFlags.cs" />
+    <Compile Include="Configuration\ConfigurationKey.cs" />
     <Compile Include="Enums\Priority.cs" />
-    <Compile Include="Events\CancellableEventInfo.cs" />
+    <Compile Include="Events\Info\Base\CancellableEventInfo.cs" />
     <Compile Include="Events\EventAttribute.cs" />
     <Compile Include="Events\EventData.cs" />
     <Compile Include="Events\EventHandlers.cs" />
@@ -125,12 +120,12 @@
     <Compile Include="IO\Directory.cs" />
     <Compile Include="IO\File.cs" />
     <Compile Include="Logging\Log.cs" />
-    <Compile Include="Logging\LogFormatTag.cs" />
-    <Compile Include="Logging\LogFormatter.cs" />
-    <Compile Include="Logging\LogFormatting.cs" />
+    <Compile Include="Logging\Formatting\LogFormatTag.cs" />
+    <Compile Include="Logging\Formatting\LogFormatter.cs" />
+    <Compile Include="Logging\Formatting\LogFormatting.cs" />
     <Compile Include="Logging\LogMessage.cs" />
-    <Compile Include="Logging\LogRateLimit.cs" />
-    <Compile Include="Logging\LogRateLimitValue.cs" />
+    <Compile Include="Logging\Ratelimiting\LogRateLimit.cs" />
+    <Compile Include="Logging\Ratelimiting\LogRateLimitValue.cs" />
     <Compile Include="Logging\LogStream.cs" />
     <Compile Include="Logging\LogType.cs" />
     <Compile Include="Logging\LogTypes.cs" />
@@ -139,6 +134,9 @@
     <Compile Include="Logging\Streams\File\FileLogStreamBuffer.cs" />
     <Compile Include="Logging\Streams\File\FileLogStreamMode.cs" />
     <Compile Include="Logging\Streams\Unity\UnityStream.cs" />
+    <Compile Include="Modules\ChildModule.cs" />
+    <Compile Include="Modules\ChildModuleUpdateOptions.cs" />
+    <Compile Include="Modules\ParentModule.cs" />
     <Compile Include="Packaging\Packager.cs" />
     <Compile Include="Patching\Detours\DetourHandler.cs" />
     <Compile Include="Patching\PatchAttribute.cs" />
@@ -146,18 +144,26 @@
     <Compile Include="Patching\PatchInfo.cs" />
     <Compile Include="Patching\Patcher.cs" />
     <Compile Include="Patching\PatchFlags.cs" />
+    <Compile Include="Profiling\Events\EventProfiler.cs" />
+    <Compile Include="Profiling\Events\EventProfilerFrame.cs" />
+    <Compile Include="Profiling\Profiler.cs" />
+    <Compile Include="Profiling\ProfilerFrame.cs" />
+    <Compile Include="Profiling\ProfilerMode.cs" />
+    <Compile Include="Profiling\ProfilerPatcher.cs" />
+    <Compile Include="Profiling\ProfilerRecord.cs" />
+    <Compile Include="Profiling\ProfilerStamp.cs" />
+    <Compile Include="Profiling\ProfilerStat.cs" />
+    <Compile Include="Utilities\AssertUtils.cs" />
+    <Compile Include="Utilities\Calls\CallFlags.cs" />
+    <Compile Include="Utilities\Calls\CallInfo.cs" />
+    <Compile Include="Utilities\CommonRegex.cs" />
+    <Compile Include="Utilities\Delay.cs" />
+    <Compile Include="Utilities\EnumUtils.cs" />
     <Compile Include="Utilities\Patches\PropertyPatch.cs" />
-    <Compile Include="Plugins\Configuration\ConfigurationAttribute.cs" />
-    <Compile Include="Plugins\Configuration\ConfigurationFile.cs" />
-    <Compile Include="Plugins\Configuration\ConfigurationFlags.cs" />
-    <Compile Include="Plugins\Configuration\ConfigurationHandler.cs" />
-    <Compile Include="Plugins\Configuration\ConfigurationOptions.cs" />
-    <Compile Include="Plugins\Plugin.cs" />
-    <Compile Include="Plugins\PluginAttribute.cs" />
-    <Compile Include="Plugins\PluginInfo.cs" />
-    <Compile Include="Plugins\PluginManager.cs" />
-    <Compile Include="Plugins\PluginOptions.cs" />
-    <Compile Include="Plugins\PluginState.cs" />
+    <Compile Include="Configuration\ConfigurationAttribute.cs" />
+    <Compile Include="Configuration\ConfigurationHandlerFlags.cs" />
+    <Compile Include="Configuration\ConfigurationHandler.cs" />
+    <Compile Include="Configuration\ConfigurationOptions.cs" />
     <Compile Include="Pooling\Exceptions\ConstructorFailedException.cs" />
     <Compile Include="Pooling\Exceptions\EmptyPoolException.cs" />
     <Compile Include="Pooling\Exceptions\ItemAlreadyReturnedException.cs" />
@@ -179,8 +185,8 @@
     <Compile Include="Utilities\Instances\InstanceCreator.cs" />
     <Compile Include="Utilities\Instances\InstanceTracker.cs" />
     <Compile Include="Utilities\Reflection\AssemblyUtilities.cs" />
+    <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\Time\Delay.cs" />
-    <Compile Include="Utilities\Reflection\CallStats.cs" />
     <Compile Include="Utilities\RandomGeneration.cs" />
     <Compile Include="Utilities\Disposable.cs" />
     <Compile Include="Utilities\Reflection\EventUtilities.cs" />
@@ -195,11 +201,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Events\Data\Items\" />
-    <Folder Include="Events\Data\Map\" />
-    <Folder Include="Events\Data\Player\" />
-    <Folder Include="Events\Data\Round\" />
-    <Folder Include="Events\Data\Server\" />
     <Folder Include="Events\Info\Items\" />
     <Folder Include="Events\Info\Map\" />
     <Folder Include="Events\Info\Player\" />

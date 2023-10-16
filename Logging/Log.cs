@@ -1,6 +1,8 @@
 ﻿using Compendium.Logging.Streams.Console;
 using Compendium.Logging.Streams.File;
 using Compendium.Logging.Streams.Unity;
+using Compendium.Logging.Ratelimiting;
+using Compendium.Logging.Formatting;
 using Compendium.Pooling;
 using Compendium.Utilities;
 
