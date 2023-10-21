@@ -103,15 +103,23 @@
     <Compile Include="Assemblies\Packaging\AssemblyPackageData.cs" />
     <Compile Include="Assemblies\Packaging\AssemblyPackageReader.cs" />
     <Compile Include="Assemblies\Packaging\AssemblyPackageWriter.cs" />
-    <Compile Include="Attributes\AttributeInfo.cs" />
-    <Compile Include="Attributes\AttributeLocation.cs" />
-    <Compile Include="Attributes\AttributeResolveFlags.cs" />
-    <Compile Include="Attributes\AttributeResolver.cs" />
-    <Compile Include="Attributes\ResolveableAttribute.cs" />
     <Compile Include="Callbacks\CallbackAttribute.cs" />
     <Compile Include="Callbacks\LoadCallbackAttribute.cs" />
     <Compile Include="Callbacks\ReloadCallbackAttribute.cs" />
     <Compile Include="Callbacks\UnloadCallbackAttribute.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentFlags.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentHandler.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentHandlerResult.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentInfo.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentParserAttribute.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentParserData.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentParserInfo.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentParserResult.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentRestrictionInfo.cs" />
+    <Compile Include="Commands\CommandContext.cs" />
+    <Compile Include="Commands\CommandInfo.cs" />
+    <Compile Include="Commands\CommandResult.cs" />
+    <Compile Include="Commands\CommandSource.cs" />
     <Compile Include="Enums\Priority.cs" />
     <Compile Include="Events\EventDataDelegateAttribute.cs" />
     <Compile Include="Events\EventDataInvoker.cs" />
@@ -199,6 +207,7 @@
     <Compile Include="Utilities\Instances\InstanceCreator.cs" />
     <Compile Include="Utilities\Instances\InstanceTracker.cs" />
     <Compile Include="Utilities\Reflection\AssemblyUtilities.cs" />
+    <Compile Include="Utilities\Reflection\FastReflection.cs" />
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\RandomGeneration.cs" />
     <Compile Include="Utilities\Disposable.cs" />
@@ -220,7 +229,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Commands\" />
+    <Folder Include="Commands\Arguments\Parsers\" />
+    <Folder Include="Commands\Arguments\Restrictions\" />
     <Folder Include="Configuration\" />
     <Folder Include="Events\Info\Items\" />
     <Folder Include="Events\Info\Map\" />
@@ -228,6 +238,12 @@
     <Folder Include="Events\Info\Round\" />
     <Folder Include="Events\Info\Server\" />
     <Folder Include="Patching\Patches\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\API\API.csproj">
+      <Project>{3c5465b3-33fa-418a-bac6-c8692fc572ed}</Project>
+      <Name>API</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

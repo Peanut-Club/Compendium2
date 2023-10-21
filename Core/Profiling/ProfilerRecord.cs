@@ -28,7 +28,7 @@ namespace Compendium.Profiling
 
         public ProfilerMode Mode { get; set; }
 
-        public MethodInfo Target { get; }
+        public MethodBase Target { get; }
 
         public bool IsPaused { get; set; }
 
@@ -47,7 +47,7 @@ namespace Compendium.Profiling
             }
         }
 
-        public ProfilerRecord(MethodInfo target, int maxFrames = -1, ProfilerMode mode = ProfilerMode.Patched)
+        public ProfilerRecord(MethodBase target, int maxFrames = -1, ProfilerMode mode = ProfilerMode.Patched)
         {
             Target = target;
             Mode = mode;

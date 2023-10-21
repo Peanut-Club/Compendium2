@@ -19,14 +19,23 @@ namespace Compendium.Profiling
             return !record.IsPaused;
         }
 
-        public static void Start(MethodInfo method, ProfilerMode mode = ProfilerMode.Patched, int maxFrames = -1) 
+        public static void Start(MethodBase method, ProfilerMode mode = ProfilerMode.Patched, int maxFrames = -1) 
         {
             AssertUtils.ThrowIfNull(method);
 
-            if (GetRecord(method) != null)
-                return;
+            var record = GetRecord(method);
 
-            var record = new ProfilerRecord(method, maxFrames, mode);
+            if (record != null)
+            {
+                record.IsPaused = false;
+
+                if (record.Mode is ProfilerMode.Patched && !ProfilerPatcher.IsPatched(method))
+                    ProfilerPatcher.Apply(method);
+
+                return;
+            }
+
+            record = new ProfilerRecord(method, maxFrames, mode);
 
             record.Clear();
             record.IsPaused = false;
@@ -37,7 +46,7 @@ namespace Compendium.Profiling
                 ProfilerPatcher.Apply(method);
         }
 
-        public static void Stop(MethodInfo method)
+        public static void Stop(MethodBase method)
         {
             AssertUtils.ThrowIfNull(method);
 
@@ -53,13 +62,13 @@ namespace Compendium.Profiling
             record.Clear();
         }
 
-        public static void Pause(MethodInfo method)
+        public static void Pause(MethodBase method)
             => GetRecord(method)!.IsPaused = true;
 
-        public static void Resume(MethodInfo method)
+        public static void Resume(MethodBase method)
             => GetRecord(method)!.IsPaused = false;
 
-        public static ProfilerRecord GetRecord(MethodBase method)
+        public static ProfilerRecord GetRecord(MethodBase method, int maxFrames = -1, ProfilerMode mode = ProfilerMode.Patched)
         {
             for (int i = 0; i < _records.Count; i++)
             {
@@ -67,7 +76,7 @@ namespace Compendium.Profiling
                     return _records[i];
             }
 
-            return null;
+            return new ProfilerRecord(method, maxFrames, mode);
         }
     }
 }

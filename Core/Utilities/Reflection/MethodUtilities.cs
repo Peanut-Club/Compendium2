@@ -1,7 +1,9 @@
 ﻿using Compendium.Logging;
 
 using HarmonyLib;
+
 using MonoMod.Utils;
+
 using System;
 using System.Reflection;
 
@@ -13,6 +15,23 @@ namespace Compendium.Utilities.Reflection
 
         public static MethodInfo[] GetAllMethods(this Type type)
             => type.GetMethods(BindingFlags);
+
+        public static object SafeCall(this FastDelegate fastDelegate, object target, params object[] args)
+        {
+            if (fastDelegate is null)
+                return null;
+
+            try
+            {
+                return fastDelegate(target, args);
+            }
+            catch (Exception ex)
+            {
+                Log.Critical($"Failed to call fast delegate handler '{fastDelegate.Method.ToName()}' due to an exception", ex);
+            }
+
+            return null;
+        }
 
         public static object SafeCall(this FastReflectionHelper.FastInvoker fastInvokeHandler, object target, object[] args)
         {
