@@ -159,6 +159,22 @@ namespace Compendium.Utilities.Reflection
             }
         }
 
+        public static TResult SafeCall<T1, T2, TResult>(this Func<T1, T2, TResult> func, T1 t1, T2 t2)
+        {
+            if (func is null)
+                return default;
+
+            try
+            {
+                return func(t1, t2);
+            }
+            catch (Exception ex)
+            {
+                Log.Critical($"Failed to call function '{func.Method.ToName()}' due to an exception", ex);
+                return default;
+            }
+        }
+
         public static TResult SafeCall<TResult>(this Func<TResult> func)
         {
             if (func is null)

@@ -1,5 +1,4 @@
 ﻿using Compendium.Assemblies;
-using Compendium.Attributes;
 using Compendium.Logging;
 using Compendium.Utilities.Reflection;
 
@@ -21,11 +20,7 @@ namespace Compendium.Events
         static EventManager()
         {
             _events = new HashSet<EventData>();
-
             RegisterEvents(AssemblyManager.MainAssembly.Assembly);
-
-            AttributeResolver<EventAttribute>.OnRemoved += OnAttributeRemoved;
-            AttributeResolver<EventAttribute>.ResolveAttributes(AssemblyManager.MainAssembly.Assembly, AttributeResolveFlags.Method);
         }
 
         public static bool RegisterEvent(EventData data)
@@ -160,14 +155,6 @@ namespace Compendium.Events
                     }
                 }
             }
-        }
-
-        private static void OnAttributeRemoved(AttributeInfo<EventAttribute> attribute)
-        {
-            if (attribute.Location != AttributeLocation.Method || attribute.Method is null)
-                return;
-
-            UnregisterHandler(attribute.Method, attribute.Handle);
         }
     }
 }

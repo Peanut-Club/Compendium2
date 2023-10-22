@@ -87,5 +87,43 @@ namespace Compendium.Utilities.Reflection
 
             return false;
         }
+
+        public static bool InheritsInterface<TInterface>(this Type type)
+        {
+            if (type is null)
+                throw new ArgumentNullException(nameof(type));
+
+            var intfType = typeof(TInterface);
+
+            if (!intfType.IsInterface)
+                throw new ArgumentException($"Type '{intfType.ToName()}' is not an interface.");
+
+            return type.InheritsInterface(intfType);
+        }
+
+        public static bool InheritsInterface(this Type type, Type interfaceType)
+        {
+            if (type is null)
+                throw new ArgumentNullException(nameof(type));
+
+            if (interfaceType is null)
+                throw new ArgumentNullException(nameof(interfaceType));
+
+            var interfaces = type.GetInterfaces();
+
+            if (interfaces.Length <= 0)
+                return false;
+
+            for (int i = 0; i < interfaces.Length; i++)
+            {
+                if (interfaces[i] == interfaceType)
+                    return true;
+
+                if (interfaces[i].InheritsInterface(interfaceType))
+                    return true;
+            }
+
+            return false;
+        }
     }
 }

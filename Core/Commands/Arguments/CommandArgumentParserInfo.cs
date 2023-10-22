@@ -1,4 +1,5 @@
-﻿using Compendium.Utilities.Reflection;
+﻿using Compendium.Results;
+using Compendium.Utilities;
 
 using System;
 
@@ -11,9 +12,9 @@ namespace Compendium.Commands.Arguments
         public string Description { get; }
         public string[] Values { get; }
 
-        public Func<CommandArgumentParserData, CommandArgumentParserResult> Parser { get; }
+        public Func<CommandContext, string, IResult> Parser { get; }
 
-        public CommandArgumentParserInfo(Type type, string description, string[] values, Func<CommandArgumentParserData, CommandArgumentParserResult> parser)
+        public CommandArgumentParserInfo(Type type, string description, string[] values, Func<CommandContext, string, IResult> parser)
         {
             Type = type;
             Description = description;
@@ -21,14 +22,19 @@ namespace Compendium.Commands.Arguments
             Parser = parser;
         }
 
-        public bool TryParse(CommandArgumentParserData data, out CommandArgumentParserResult value)
+        public IResult Parse(CommandContext ctx, string value)
         {
             if (Parser is null)
                 throw new InvalidOperationException($"This argument's parser is invalid.");
 
-            value = Parser.SafeCall(data);
-
-            return value.IsParsed;
+            try
+            {
+                return Parser(ctx, value);
+            }
+            catch (Exception ex)
+            {
+                return ResultUtils.Error(ex.Message, ex);
+            }
         }
     }
 }

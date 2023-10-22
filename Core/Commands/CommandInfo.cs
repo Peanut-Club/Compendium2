@@ -1,4 +1,6 @@
 ﻿using Compendium.Commands.Arguments;
+using Compendium.Profiling;
+using Compendium.Utilities;
 using Compendium.Utilities.Calls;
 
 using System;
@@ -13,51 +15,44 @@ namespace Compendium.Commands
         public string Description { get; }
 
         public object Handle { get; }
-        public object[] Buffer { get; }
 
         public bool IsExecuting { get; private set; }
+        public bool IsProfiled { get => Caller.Flags.Any(CallFlags.EnableProfiler); set => Caller.Flags = value ? Caller.Flags | CallFlags.EnableProfiler : Caller.Flags & ~CallFlags.EnableProfiler; }
 
-        public CommandInfo Parent { get; }
+        public bool IgnoreExtraArguments { get; }
+
+        public int Priority { get; }
+
         public CommandSource Source { get; }
-
         public CommandArgumentInfo[] Arguments { get; }
-
         public CallInfo Caller { get; }
 
-        public CommandInfo(string name, string description, object handle, object[] buffer, CommandInfo parent, CommandSource source, CommandArgumentInfo[] arguments, CallInfo caller)
+        public ProfilerRecord Profiler => Caller.Profiler;
+
+        public CommandInfo(string name, string description, object handle, int priority, bool ignoreExtra, CommandSource source, CommandArgumentInfo[] arguments, CallInfo caller)
         {
             Name = name;
             Description = description;
             Handle = handle;
-            Buffer = buffer;
-            Parent = parent;
             Source = source;
             Arguments = arguments;
             Caller = caller;
+            Priority = priority;
+            IgnoreExtraArguments = ignoreExtra;
         }
 
-        public CommandResult? Invoke(CommandContext ctx, string args)
+        public CommandResult? Invoke(object[] args)
         {
             if (IsExecuting)
                 return null;
 
             IsExecuting = true;
 
-            if (Arguments.Length > 0)
-            {
-                var parserResult = CommandArgumentHandler.ParseArguments(this, ctx, args);
-
-                if (!parserResult.IsSuccess)
-                {
-                    IsExecuting = false;
-                    
-                    return new CommandResult(false, false, $"Argument Parser failed at argument '{Arguments[parserResult.FaultyArgumentPosition].Name}'     \n{parserResult.FaultMessage}", null);
-                }
-            }
-
             try
             {
-                var result = Caller.InvokeUnsafe(Buffer);
+                var result = Caller.InvokeUnsafe(args);
+
+                IsExecuting = false;
 
                 if (result is null)
                     return new CommandResult(true, true, null, null);
@@ -92,6 +87,7 @@ namespace Compendium.Commands
             }
             catch (Exception ex)
             {
+                IsExecuting = false;
                 return new CommandResult(ex, "An exception was caugh while attempting to execute this command.");
             }
         }

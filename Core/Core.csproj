@@ -90,39 +90,38 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assemblies\AssemblyDependency.cs" />
-    <Compile Include="Assemblies\AssemblyDependencyStatus.cs" />
-    <Compile Include="Assemblies\AssemblyInfo.cs" />
-    <Compile Include="Assemblies\AssemblyManager.cs" />
-    <Compile Include="Assemblies\AssemblyReaderFlags.cs" />
-    <Compile Include="Assemblies\AssemblySource.cs" />
-    <Compile Include="Assemblies\AssemblyStatus.cs" />
-    <Compile Include="Assemblies\AssemblyUtils.cs" />
-    <Compile Include="Assemblies\Packaging\AssemblyPackageData.cs" />
-    <Compile Include="Assemblies\Packaging\AssemblyPackageReader.cs" />
-    <Compile Include="Assemblies\Packaging\AssemblyPackageWriter.cs" />
     <Compile Include="Callbacks\CallbackAttribute.cs" />
     <Compile Include="Callbacks\LoadCallbackAttribute.cs" />
     <Compile Include="Callbacks\ReloadCallbackAttribute.cs" />
     <Compile Include="Callbacks\UnloadCallbackAttribute.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentFlags.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentCastOptions.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentDescriptionAttribute.cs" />
     <Compile Include="Commands\Arguments\CommandArgumentHandler.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentHandlerResult.cs" />
     <Compile Include="Commands\Arguments\CommandArgumentInfo.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentOptionsAttribute.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentOptionsInfo.cs" />
     <Compile Include="Commands\Arguments\CommandArgumentParserAttribute.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentParserData.cs" />
     <Compile Include="Commands\Arguments\CommandArgumentParserInfo.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentParserResult.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentProxyTypeCache.cs" />
+    <Compile Include="Commands\Arguments\CommandArgumentRestrictionAttribute.cs" />
     <Compile Include="Commands\Arguments\CommandArgumentRestrictionInfo.cs" />
+    <Compile Include="Commands\Arguments\CommandCaseSensitiveAttribute.cs" />
+    <Compile Include="Commands\Arguments\CommandCastAttribute.cs" />
+    <Compile Include="Commands\Arguments\CommandRemainderAttribute.cs" />
+    <Compile Include="Commands\CommandAttribute.cs" />
     <Compile Include="Commands\CommandContext.cs" />
     <Compile Include="Commands\CommandInfo.cs" />
     <Compile Include="Commands\CommandResult.cs" />
     <Compile Include="Commands\CommandSource.cs" />
     <Compile Include="Enums\Priority.cs" />
     <Compile Include="Events\EventDataDelegateAttribute.cs" />
-    <Compile Include="Events\EventDataInvoker.cs" />
+    <Compile Include="Events\EventDataInvokerAttribute.cs" />
     <Compile Include="Events\EventDataPatchAttribute.cs" />
     <Compile Include="Events\Info\Base\CancellableEventInfo.cs" />
     <Compile Include="Events\EventAttribute.cs" />
@@ -153,13 +152,12 @@
     <Compile Include="Logging\Streams\File\FileLogStreamBuffer.cs" />
     <Compile Include="Logging\Streams\File\FileLogStreamMode.cs" />
     <Compile Include="Logging\Streams\Unity\UnityStream.cs" />
-    <Compile Include="Modules\ChildModule.cs" />
-    <Compile Include="Modules\ChildModuleUpdateOptions.cs" />
-    <Compile Include="Modules\ParentModule.cs" />
     <Compile Include="Packaging\PackageData.cs" />
     <Compile Include="Packaging\Packager.cs" />
     <Compile Include="Packaging\PackageReader.cs" />
     <Compile Include="Packaging\PackageWriter.cs" />
+    <Compile Include="Parenting\ChildObject.cs" />
+    <Compile Include="Parenting\ParentObject.cs" />
     <Compile Include="Patching\Detours\DetourHandler.cs" />
     <Compile Include="Patching\PatchAttribute.cs" />
     <Compile Include="Patching\Patches.cs" />
@@ -179,6 +177,9 @@
     <Compile Include="Profiling\ProfilerRecord.cs" />
     <Compile Include="Profiling\ProfilerStamp.cs" />
     <Compile Include="Profiling\ProfilerStat.cs" />
+    <Compile Include="Results\ErrorResult.cs" />
+    <Compile Include="Results\IResult.cs" />
+    <Compile Include="Results\SuccessResult.cs" />
     <Compile Include="Utilities\AssertUtils.cs" />
     <Compile Include="Utilities\Calls\CallFlags.cs" />
     <Compile Include="Utilities\Calls\CallInfo.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="Utilities\Instances\InstanceTracker.cs" />
     <Compile Include="Utilities\Reflection\AssemblyUtilities.cs" />
     <Compile Include="Utilities\Reflection\FastReflection.cs" />
+    <Compile Include="Utilities\ResultUtils.cs" />
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\RandomGeneration.cs" />
     <Compile Include="Utilities\Disposable.cs" />

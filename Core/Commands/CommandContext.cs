@@ -8,6 +8,6 @@ namespace Compendium.Commands
 {
     public class CommandContext
     {
-
+        public Player Sender { get; }
     }
 }
