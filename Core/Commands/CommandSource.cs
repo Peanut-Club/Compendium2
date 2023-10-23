@@ -25,6 +25,9 @@ namespace Compendium.Commands
 
         public bool IsCaseSensitive { get; set; }
 
+        public void AddCommands()
+            => AddCommands(Assembly.GetCallingAssembly());
+
         public void AddCommands(Assembly assembly)
         {
             foreach (var type in assembly.GetTypes())
@@ -50,7 +53,7 @@ namespace Compendium.Commands
                                 && cmd.Arguments.Select(x => x.Type).IsMatch(method.GetParameters().Select(x => x.ParameterType))))
                         continue;
 
-                    var cmd = new CommandInfo(
+                    AddCommand(new CommandInfo(
                         commandAttribute.Name,
                         commandAttribute.Description,
 
@@ -64,9 +67,7 @@ namespace Compendium.Commands
 
                         GatherArguments(method),
 
-                        CallInfo.Get(method, handle, CallFlags.None, null));
-
-                    AddCommand(cmd);
+                        CallInfo.Get(method, handle, CallFlags.None, null)));
                 }
             }
         }
@@ -89,6 +90,9 @@ namespace Compendium.Commands
 
         public void RemoveCommands(Assembly assembly)
             => _commands.RemoveAll(c => c.Caller.Method.DeclaringType.Assembly == assembly);
+
+        public void RemoveCommands()
+            => RemoveCommands(Assembly.GetCallingAssembly());
 
         public IResult Execute(string args, CommandContext ctx)
         {
@@ -119,12 +123,11 @@ namespace Compendium.Commands
             if (!parsingResult.TryReadValue<object[]>(out var overloadArgs))
                 return parsingResult;
 
-            var exResult = chosenCmd.Item1.Invoke(overloadArgs);
+            var exResult = chosenCmd.Item1.Invoke(overloadArgs).GetValueOrDefault();
 
-            if (!exResult.HasValue)
-                return ResultUtils.Error("$ID_ExecuteError");
-
-            return exResult.Value.IsSuccess ? ResultUtils.Success(exResult.Value) : ResultUtils.Error(exResult.Value.Response, exResult.Value.Exception);
+            return exResult.IsSuccess 
+                ? ResultUtils.Success(exResult) 
+                : ResultUtils.Error(exResult.Response, exResult.Exception);
         }
 
         public IResult Search(string args)

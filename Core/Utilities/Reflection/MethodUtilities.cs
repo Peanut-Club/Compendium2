@@ -190,5 +190,96 @@ namespace Compendium.Utilities.Reflection
                 return default;
             }
         }
+
+        public static bool TryCreateDelegate<TDelegate>(this MethodBase method, object target, out TDelegate del) where TDelegate : Delegate
+        {
+            if (method is null)
+                throw new ArgumentNullException(nameof(method));
+
+            if (!method.IsStatic && !ObjectUtilities.VerifyClassInstanceForMember(method, target))
+                throw new ArgumentNullException(nameof(target));
+
+            try
+            {
+                del = method.CreateDelegate(typeof(TDelegate), target) as TDelegate;
+
+                return del != null;
+            }
+            catch (Exception ex)
+            {
+                Log.Critical($"Failed to create delegate '{typeof(TDelegate).FullName}' for method '{method.ToName()}'", ex);
+
+                del = null;
+                return false;
+            }
+        }
+
+        public static bool TryCreateDelegate(this MethodBase method, Type delegateType, out Delegate del)
+        {
+            if (method is null)
+                throw new ArgumentNullException(nameof(method));
+
+            if (!method.IsStatic)
+                throw new ArgumentException($"Use the other overload for non-static methods!");
+
+            try
+            {
+                del = method.CreateDelegate(delegateType);
+
+                return del != null;
+            }
+            catch (Exception ex)
+            {
+                Log.Critical($"Failed to create delegate '{delegateType.FullName}' for method '{method.ToName()}'", ex);
+
+                del = null;
+                return false;
+            }
+        }
+
+        public static bool TryCreateDelegate(this MethodBase method, object target, Type delegateType, out Delegate del)
+        {
+            if (method is null)
+                throw new ArgumentNullException(nameof(method));
+
+            if (!method.IsStatic && !ObjectUtilities.VerifyClassInstanceForMember(method, target))
+                throw new ArgumentNullException(nameof(target));
+
+            try
+            {
+                del = method.CreateDelegate(delegateType, target);
+
+                return del != null;
+            }
+            catch (Exception ex)
+            {
+                Log.Critical($"Failed to create delegate '{delegateType.FullName}' for method '{method.ToName()}'", ex);
+
+                del = null;
+                return false;
+            }
+        }
+
+        public static bool TryCreateDelegate<TDelegate>(this MethodBase method, out TDelegate del) where TDelegate : Delegate
+        {
+            if (method is null)
+                throw new ArgumentNullException(nameof(method));
+
+            if (!method.IsStatic)
+                throw new ArgumentException($"Use the other overload for non-static methods!");
+
+            try
+            {
+                del = method.CreateDelegate(typeof(TDelegate)) as TDelegate;
+                return del != null;
+            }
+            catch (Exception ex)
+            {
+                Log.Critical($"Failed to create delegate '{typeof(TDelegate).FullName}' for method '{method.ToName()}'", ex);
+
+                del = null;
+                return false;
+            }
+        }
     }
 }

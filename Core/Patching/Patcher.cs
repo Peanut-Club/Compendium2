@@ -1,18 +1,11 @@
-﻿using Compendium.Attributes;
-using Compendium.Callbacks;
-using Compendium.Events;
-using Compendium.Extensions;
+﻿using Compendium.Callbacks;
 using Compendium.Logging;
 using Compendium.Logging.Formatting;
 
 using HarmonyLib;
 
-using MonoMod.Utils;
-
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace Compendium.Patching
 {
@@ -33,49 +26,6 @@ namespace Compendium.Patching
             Instance = null;
         }
 
-        public static void RemovePatches(Assembly assembly)
-        {
-            for (int i = 0; i < _patches.Count; i++)
-            {
-                if (_patches[i].Method.DeclaringType.Assembly == assembly)
-                    _patches[i].Unapply();
-            }
 
-            _patches.RemoveAll(p => p.Method.DeclaringType.Assembly == assembly);
-        }
-
-        public static void ApplyPatches(Assembly assembly)
-        {
-            var types = assembly.GetTypes();
-
-            for (int i = 0; i < types.Length; i++)
-            {
-                var attributes = AttributeResolver<PatchAttribute>.ResolveAttributes(types[i], null, AttributeResolveFlags.Method);
-
-                if (attributes is null || attributes.Count < 1)
-                    continue;
-
-                foreach (var attr in attributes)
-                {
-                    if (attr.Attribute.Info is null)
-                        continue;
-
-                    if (_patches.Any(p => p.Method == attr.Attribute.Info.Method && p.Target == attr.Attribute.Info.Target))
-                        continue;
-
-                    _patches.Add(attr.Attribute.Info);
-
-                    Logger.Debug($"Found patch: '{attr.Attribute.Info.Name}'");
-
-                    if (attr.Attribute.Info.Flags.Has(PatchFlags.IsEvent)
-                        && attr.Attribute.eventType != null)
-                    {
-
-                    }
-                    else
-                        attr.Attribute.Info.Apply();
-                }
-            }
-        }
     }
 }

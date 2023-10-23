@@ -7,6 +7,8 @@ namespace Compendium.Utilities
 {
     public static class StringUtils
     {
+        public static readonly char[] MultiLine = new char[] { '\r', '\n', '\x85', '\x2028', '\x2029' };
+
         public static string Compile(this IEnumerable<string> values, string separator = "\n")
             => string.Join(separator, values);
 
@@ -15,6 +17,9 @@ namespace Compendium.Utilities
 
         public static string SubstringPostfix(this string str, int length, string postfix = " ...")
             => str.SubstringPostfix(0, length, postfix);
+
+        public static string[] SplitByLine(this string str)
+            => str.Split(MultiLine);
 
         public static string SnakeCase(this string str)
         {

@@ -1,4 +1,5 @@
-﻿using Compendium.Utilities.Reflection;
+﻿using Compendium.Configuration;
+using Compendium.Utilities.Reflection;
 
 using System;
 
@@ -27,13 +28,13 @@ namespace Compendium.IO
 
         public static event Action OnInitialized;
 
-        // [Configuration]
+        [Configuration]
         public static string[] GlobalPaths { get; set; } = new string[]
         {
             "*"
         };
 
-        // [Configuration]
+        [Configuration]
         public static string[] ServerPaths { get; set; } = new string[]
         {
          

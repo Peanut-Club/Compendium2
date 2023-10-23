@@ -2,7 +2,7 @@
 
 namespace Compendium.Commands.Arguments
 {
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class CommandArgumentParserAttribute : Attribute
     {
         public Type Type { get; }

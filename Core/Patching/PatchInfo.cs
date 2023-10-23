@@ -1,4 +1,5 @@
 ﻿using Compendium.Extensions;
+
 using HarmonyLib;
 
 using MonoMod.Utils;

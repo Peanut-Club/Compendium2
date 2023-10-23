@@ -91,6 +91,51 @@ namespace Compendium.Commands.Arguments
                     {'〚', '〛' }
         };
 
+        public static void AddParsers()
+            => AddParsers(Assembly.GetCallingAssembly());
+
+        public static void AddParsers(Assembly assembly)
+        {
+            foreach (var type in assembly.GetTypes())
+                AddParsers(type);
+        }
+
+        public static void AddParsers(Type type)
+        {
+            var methods = type.GetAllMethods();
+            var fields = type.GetAllFields();
+            var properties = type.GetAllProperties();
+
+            foreach (var method in methods)
+            {
+                if (!method.IsStatic || !method.HasAttribute<CommandArgumentParserAttribute>(out var commandArgumentParserAttribute))
+                    continue;
+
+                if (!method.TryCreateDelegate<Func<CommandContext, Type, string, IResult>>(out var parser))
+                    continue;
+
+                AddParser(new CommandArgumentParserInfo(commandArgumentParserAttribute.Type, commandArgumentParserAttribute.Description, commandArgumentParserAttribute.Values, parser));
+            }
+        }
+
+        public static void AddParser(CommandArgumentParserInfo parserInfo)
+        {
+            if (parserInfo is null)
+                throw new ArgumentNullException(nameof(parserInfo));
+
+            _parsers.RemoveAll(p => p.Type == parserInfo.Type);
+            _parsers.Add(parserInfo);
+        }
+
+        public static void RemoveParser(Type type)
+            => _parsers.RemoveAll(p => p.Type == type);
+
+        public static void RemoveParsers(Type type)
+            => _parsers.RemoveAll(p => p.Parser.GetMethodInfo().DeclaringType == type);
+
+        public static void RemoveParsers(Assembly assembly)
+            => _parsers.RemoveAll(p => p.Parser.GetMethodInfo().DeclaringType.Assembly == assembly);
+
         public static CommandArgumentParserInfo GetParser(Type type)
         {
             if (!_typeCache.IsContained(ref type))
@@ -359,7 +404,11 @@ namespace Compendium.Commands.Arguments
 
             StringBuilderPool.Shared.Return(builder);
 
-            return ResultUtils.Success(new Tuple<IResult[], IResult[]>(ListPool<IResult>.Shared.ToArrayReturn(results), ListPool<IResult>.Shared.ToArrayReturn(paramResults)));
+            return ResultUtils.Success(
+                new Tuple<IResult[], IResult[]>(
+                    ListPool<IResult>.Shared.ToArrayReturn(results), 
+                    ListPool<IResult>.Shared.ToArrayReturn(paramResults)
+                                                ));
         }
 
         public static IResult Cast(Vector3 position, Vector3 forward, CommandArgumentCastOptions commandArgumentCastOptions)

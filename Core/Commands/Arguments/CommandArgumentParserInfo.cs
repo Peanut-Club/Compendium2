@@ -12,9 +12,9 @@ namespace Compendium.Commands.Arguments
         public string Description { get; }
         public string[] Values { get; }
 
-        public Func<CommandContext, string, IResult> Parser { get; }
+        public Func<CommandContext, Type, string, IResult> Parser { get; }
 
-        public CommandArgumentParserInfo(Type type, string description, string[] values, Func<CommandContext, string, IResult> parser)
+        public CommandArgumentParserInfo(Type type, string description, string[] values, Func<CommandContext, Type, string, IResult> parser)
         {
             Type = type;
             Description = description;
@@ -29,7 +29,7 @@ namespace Compendium.Commands.Arguments
 
             try
             {
-                return Parser(ctx, value);
+                return Parser(ctx, Type, value);
             }
             catch (Exception ex)
             {
