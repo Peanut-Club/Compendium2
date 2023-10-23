@@ -13,6 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <LangVersion>latest</LangVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,6 +44,9 @@
     </Reference>
     <Reference Include="Assembly-CSharp_publicized">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Assembly-CSharp_publicized.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Mirror_publicized">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Mirror_publicized.dll</HintPath>
@@ -77,6 +82,9 @@
       <HintPath>packages\MonoMod.Utils.25.0.3\lib\net452\MonoMod.Utils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.CodeDom, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.CodeDom.8.0.0-rc.2.23479.6\lib\net462\System.CodeDom.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
@@ -103,6 +111,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assemblies\AssemblyReference.cs" />
     <Compile Include="Callbacks\CallbackAttribute.cs" />
     <Compile Include="Callbacks\LoadCallbackAttribute.cs" />
     <Compile Include="Callbacks\ReloadCallbackAttribute.cs" />
@@ -127,6 +136,9 @@
     <Compile Include="Commands\CommandInfo.cs" />
     <Compile Include="Commands\CommandResult.cs" />
     <Compile Include="Commands\CommandSource.cs" />
+    <Compile Include="Compilation\CompilationMessage.cs" />
+    <Compile Include="Compilation\CompilationResult.cs" />
+    <Compile Include="Compilation\Compiler.cs" />
     <Compile Include="Configuration\ConfigurationAttribute.cs" />
     <Compile Include="Configuration\ConfigurationDescriptionAttribute.cs" />
     <Compile Include="Configuration\ConfigurationHandler.cs" />
@@ -142,12 +154,13 @@
     <Compile Include="Configuration\YamlApi\CommentsObjectGraphVisitor.cs" />
     <Compile Include="Configuration\YamlApi\CommentsPropertyDescriptor.cs" />
     <Compile Include="Enums\Priority.cs" />
-    <Compile Include="Events\EventDataDelegateAttribute.cs" />
-    <Compile Include="Events\EventDataInvokerAttribute.cs" />
-    <Compile Include="Events\EventDataPatchAttribute.cs" />
+    <Compile Include="Events\EventDelegateAttribute.cs" />
+    <Compile Include="Events\EventInvokerAttribute.cs" />
+    <Compile Include="Events\EventPatchAttribute.cs" />
+    <Compile Include="Events\EventDescriptor.cs" />
+    <Compile Include="Events\EventListenerData.cs" />
     <Compile Include="Events\Info\Base\CancellableEventInfo.cs" />
     <Compile Include="Events\EventAttribute.cs" />
-    <Compile Include="Events\EventData.cs" />
     <Compile Include="Events\EventInfo.cs" />
     <Compile Include="Events\EventManager.cs" />
     <Compile Include="Execution\ExecutionInfo.cs" />
@@ -158,6 +171,11 @@
     <Compile Include="Execution\TaskScheduler.cs" />
     <Compile Include="Extensions\BinaryReaderExtensions.cs" />
     <Compile Include="Extensions\BinaryWriterExtensions.cs" />
+    <Compile Include="Instances\InstanceAttribute.cs" />
+    <Compile Include="Instances\InstanceDescriptor.cs" />
+    <Compile Include="Instances\InstanceManager.cs" />
+    <Compile Include="Instances\InstanceUtils.cs" />
+    <Compile Include="Instances\InstantiateAttribute.cs" />
     <Compile Include="IO\Paths.cs" />
     <Compile Include="IO\PathType.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
@@ -185,20 +203,28 @@
     <Compile Include="Modules\ModuleUpdateAttribute.cs" />
     <Compile Include="Modules\ModuleUpdateInfo.cs" />
     <Compile Include="Modules\ModuleUpdateSource.cs" />
-    <Compile Include="Packaging\PackageData.cs" />
+    <Compile Include="Packaging\IPackage.cs" />
     <Compile Include="Packaging\Packager.cs" />
-    <Compile Include="Packaging\PackageReader.cs" />
-    <Compile Include="Packaging\PackageWriter.cs" />
+    <Compile Include="Packaging\IPackageReader.cs" />
+    <Compile Include="Packaging\IPackageWriter.cs" />
     <Compile Include="Parenting\ChildObject.cs" />
     <Compile Include="Parenting\ParentObject.cs" />
     <Compile Include="Patching\Detours\DetourHandler.cs" />
     <Compile Include="Patching\PatchAttribute.cs" />
     <Compile Include="Patching\Patches.cs" />
-    <Compile Include="Patching\PatchInfo.cs" />
+    <Compile Include="Patching\PatchDescriptor.cs" />
     <Compile Include="Patching\Patcher.cs" />
     <Compile Include="Patching\PatchFlags.cs" />
+    <Compile Include="Plugins\Packaging\PackagedAssembly.cs" />
+    <Compile Include="Plugins\Packaging\AssemblyPackager.cs" />
+    <Compile Include="Plugins\Packaging\PackagedPlugin.cs" />
+    <Compile Include="Plugins\Packaging\PluginPackager.cs" />
     <Compile Include="Plugins\PluginAttribute.cs" />
+    <Compile Include="Plugins\PluginDescriptor.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
+    <Compile Include="Plugins\PluginMetadata.cs" />
+    <Compile Include="Plugins\PluginSymbols.cs" />
+    <Compile Include="Plugins\PluginVersion.cs" />
     <Compile Include="Pooling\Pools\DictionaryPool.cs" />
     <Compile Include="Profiling\Events\EventProfiler.cs" />
     <Compile Include="Profiling\Events\EventProfilerFrame.cs" />
@@ -277,4 +303,11 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
+  </Target>
 </Project>

@@ -12,7 +12,7 @@ namespace Compendium.Patching
         internal PatchFlags flags;
         internal Type eventType;
 
-        public PatchInfo Info { get; private set; }
+        public PatchDescriptor Info { get; private set; }
 
         public PatchAttribute(MethodInfo target, PatchFlags flags)
         {

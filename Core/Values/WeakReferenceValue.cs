@@ -12,6 +12,8 @@ namespace Compendium.Values
             set => _weakRef?.SetTarget(value);
         }
 
+        public bool IsAlive { get => _weakRef != null && _weakRef.TryGetTarget(out _); }
+
         public WeakReferenceValue(bool trackValue = true)
             => _weakRef = new WeakReference<TValue>(null, trackValue);
 

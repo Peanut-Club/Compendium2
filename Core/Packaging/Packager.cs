@@ -6,21 +6,21 @@ namespace Compendium.Packaging
 {
     public static class Packager
     {
-        private static readonly Dictionary<Type, PackageReader> _readers = new Dictionary<Type, PackageReader>();
-        private static readonly Dictionary<Type, PackageWriter> _writers = new Dictionary<Type, PackageWriter>();
+        private static readonly Dictionary<Type, IPackageReader> _readers = new Dictionary<Type, IPackageReader>();
+        private static readonly Dictionary<Type, IPackageWriter> _writers = new Dictionary<Type, IPackageWriter>();
 
         public static void SetReaderWriter<TPackageData, TPackageWriter, TPackageReader>()
-            where TPackageData : PackageData, new()
-            where TPackageReader : PackageReader, new()
-            where TPackageWriter : PackageWriter, new()
+            where TPackageData : IPackage, new()
+            where TPackageReader : IPackageReader, new()
+            where TPackageWriter : IPackageWriter, new()
         {
             SetReader<TPackageData, TPackageReader>();
             SetWriter<TPackageData, TPackageWriter>();
         }
 
         public static void SetWriter<TPackageData, TPackageWriter>()
-            where TPackageData : PackageData, new()
-            where TPackageWriter : PackageWriter, new()
+            where TPackageData : IPackage, new()
+            where TPackageWriter : IPackageWriter, new()
         {
             if (_writers.ContainsKey(typeof(TPackageData)))
                 throw new InvalidOperationException($"There already is a writer for type '{typeof(TPackageData).FullName}'");
@@ -29,8 +29,8 @@ namespace Compendium.Packaging
         }
 
         public static void SetReader<TPackageData, TPackageReader>()
-            where TPackageData : PackageData, new()
-            where TPackageReader : PackageReader, new()
+            where TPackageData : IPackage, new()
+            where TPackageReader : IPackageReader, new()
         {
             if (_readers.ContainsKey(typeof(TPackageData)))
                 throw new InvalidOperationException($"There already is a reader for type '{typeof(TPackageData).FullName}'");
@@ -38,13 +38,13 @@ namespace Compendium.Packaging
             _readers[typeof(TPackageData)] = new TPackageReader();
         }
 
-        public static PackageReader GetReader<TPackageData>() where TPackageData : PackageData, new()
+        public static IPackageReader GetReader<TPackageData>() where TPackageData : IPackage, new()
             => _readers.TryGetValue(typeof(TPackageData), out var reader) ? reader : throw new NotImplementedException($"There are no readers registered for type '{typeof(TPackageData).FullName}'");
 
-        public static PackageWriter GetWriter<TPackageData>() where TPackageData : PackageData, new()
+        public static IPackageWriter GetWriter<TPackageData>() where TPackageData : IPackage, new()
             => _writers.TryGetValue(typeof(TPackageData), out var writer) ? writer : throw new NotImplementedException($"There are no writers registered for type '{typeof(TPackageData).FullName}'");
 
-        public static TPackageData ReadPackage<TPackageData>(byte[] packageBytes) where TPackageData : PackageData, new()
+        public static TPackageData ReadPackage<TPackageData>(byte[] packageBytes) where TPackageData : IPackage, new()
         {
             if (packageBytes is null)
                 throw new ArgumentNullException(nameof(packageBytes));
@@ -60,16 +60,16 @@ namespace Compendium.Packaging
                 var package = packageReader.Read(reader);
 
                 if (package is null)
-                    throw new Exception($"Reader failed to read package");
+                    throw new Exception($"Reader failed to read package.");
 
                 if (package is not TPackageData packageData)
-                    throw new Exception($"Reader returned a wrong value");
+                    throw new Exception($"Reader returned a wrong value type.");
 
                 return packageData;
             }
         }
 
-        public static byte[] WritePackage<TPackageData>(TPackageData packageData) where TPackageData : PackageData, new()
+        public static byte[] WritePackage<TPackageData>(TPackageData packageData) where TPackageData : IPackage, new()
         {
             if (packageData is null)
                 throw new ArgumentNullException(nameof(packageData));
