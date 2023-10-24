@@ -4,15 +4,13 @@ using System.Reflection;
 
 namespace Compendium.Assemblies
 {
-    public struct AssemblyReference
+    public struct AssemblyDependency
     {
         public byte[] Raw;
-        public string Name;
         public bool RemovedRefs;
+        public string Name;
 
         public Assembly Assembly;
-        public AssemblyDefinition Definition;
-
-        public AssemblyDependency[] Dependencies;
+        public AssemblyNameReference Reference;
     }
 }

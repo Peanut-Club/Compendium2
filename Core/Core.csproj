@@ -111,6 +111,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assemblies\AssemblyDependency.cs" />
     <Compile Include="Assemblies\AssemblyReference.cs" />
     <Compile Include="Callbacks\CallbackAttribute.cs" />
     <Compile Include="Callbacks\LoadCallbackAttribute.cs" />
@@ -217,8 +218,6 @@
     <Compile Include="Patching\PatchFlags.cs" />
     <Compile Include="Plugins\Packaging\PackagedAssembly.cs" />
     <Compile Include="Plugins\Packaging\AssemblyPackager.cs" />
-    <Compile Include="Plugins\Packaging\PackagedPlugin.cs" />
-    <Compile Include="Plugins\Packaging\PluginPackager.cs" />
     <Compile Include="Plugins\PluginAttribute.cs" />
     <Compile Include="Plugins\PluginDescriptor.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
@@ -243,6 +242,7 @@
     <Compile Include="Utilities\Calls\CallInfo.cs" />
     <Compile Include="Utilities\CommonRegex.cs" />
     <Compile Include="Utilities\Delay.cs" />
+    <Compile Include="Utilities\DependencyUtils.cs" />
     <Compile Include="Utilities\EnumUtils.cs" />
     <Compile Include="Utilities\Patches\PropertyPatch.cs" />
     <Compile Include="Pooling\Exceptions\ConstructorFailedException.cs" />
