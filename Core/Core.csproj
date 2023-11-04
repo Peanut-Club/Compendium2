@@ -39,6 +39,9 @@
     <Reference Include="0Harmony, Version=2.10.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\HarmonyX.2.10.2\lib\net45\0Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="api">
+      <HintPath>..\API\bin\Debug\api.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
@@ -114,64 +117,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assemblies\LoadedAssembly.cs" />
-    <Compile Include="Callbacks\CallbackAttribute.cs" />
-    <Compile Include="Callbacks\LoadCallbackAttribute.cs" />
-    <Compile Include="Callbacks\ReloadCallbackAttribute.cs" />
-    <Compile Include="Callbacks\UnloadCallbackAttribute.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentCastOptions.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentDescriptionAttribute.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentHandler.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentInfo.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentOptionsAttribute.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentOptionsInfo.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentParserAttribute.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentParserInfo.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentProxyTypeCache.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentRestrictionAttribute.cs" />
-    <Compile Include="Commands\Arguments\CommandArgumentRestrictionInfo.cs" />
-    <Compile Include="Commands\Arguments\CommandCaseSensitiveAttribute.cs" />
-    <Compile Include="Commands\Arguments\CommandCastAttribute.cs" />
-    <Compile Include="Commands\Arguments\CommandRemainderAttribute.cs" />
-    <Compile Include="Commands\Arguments\Parsers\SystemParsers.cs" />
-    <Compile Include="Commands\CommandAttribute.cs" />
-    <Compile Include="Commands\CommandContext.cs" />
-    <Compile Include="Commands\CommandInfo.cs" />
-    <Compile Include="Commands\CommandResult.cs" />
-    <Compile Include="Commands\CommandSource.cs" />
-    <Compile Include="Compilation\CompilationMessage.cs" />
-    <Compile Include="Compilation\CompilationResult.cs" />
-    <Compile Include="Compilation\Compiler.cs" />
-    <Compile Include="Configuration\ConfigurationAttribute.cs" />
-    <Compile Include="Configuration\ConfigurationDescriptionAttribute.cs" />
-    <Compile Include="Configuration\ConfigurationHandler.cs" />
-    <Compile Include="Configuration\ConfigurationReader.cs" />
-    <Compile Include="Configuration\ConfigurationSerializer.cs" />
-    <Compile Include="Configuration\ConfigurationTargetInfo.cs" />
-    <Compile Include="Configuration\ConfigurationStatus.cs" />
-    <Compile Include="Configuration\ConfigurationTargetStatus.cs" />
-    <Compile Include="Configuration\ConfigurationUtils.cs" />
-    <Compile Include="Configuration\ConfigurationWriter.cs" />
-    <Compile Include="Configuration\YamlApi\CommentGatheringTypeInspector.cs" />
-    <Compile Include="Configuration\YamlApi\CommentsObjectDescriptor.cs" />
-    <Compile Include="Configuration\YamlApi\CommentsObjectGraphVisitor.cs" />
-    <Compile Include="Configuration\YamlApi\CommentsPropertyDescriptor.cs" />
-    <Compile Include="Enums\Priority.cs" />
-    <Compile Include="Events\EventDelegateAttribute.cs" />
-    <Compile Include="Events\EventInvokerAttribute.cs" />
-    <Compile Include="Events\EventPatchAttribute.cs" />
-    <Compile Include="Events\EventDescriptor.cs" />
-    <Compile Include="Events\EventListenerData.cs" />
-    <Compile Include="Events\Info\Base\CancellableEventInfo.cs" />
-    <Compile Include="Events\EventAttribute.cs" />
-    <Compile Include="Events\EventInfo.cs" />
-    <Compile Include="Events\EventManager.cs" />
-    <Compile Include="Execution\ExecutionInfo.cs" />
-    <Compile Include="Execution\ExecutionScheduler.cs" />
-    <Compile Include="Execution\GenericTaskInfo.cs" />
-    <Compile Include="Execution\GenericTaskScheduler.cs" />
-    <Compile Include="Execution\TaskInfo.cs" />
-    <Compile Include="Execution\TaskScheduler.cs" />
     <Compile Include="Extensions\BinaryReaderExtensions.cs" />
     <Compile Include="Extensions\BinaryWriterExtensions.cs" />
     <Compile Include="Instances\InstanceAttribute.cs" />
@@ -182,7 +127,6 @@
     <Compile Include="IO\Paths.cs" />
     <Compile Include="IO\PathType.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
-    <Compile Include="Extensions\DetourExtensions.cs" />
     <Compile Include="Extensions\LogExtensions.cs" />
     <Compile Include="IO\Directory.cs" />
     <Compile Include="IO\File.cs" />
@@ -201,39 +145,13 @@
     <Compile Include="Logging\Streams\File\FileLogStreamBuffer.cs" />
     <Compile Include="Logging\Streams\File\FileLogStreamMode.cs" />
     <Compile Include="Logging\Streams\Unity\UnityStream.cs" />
-    <Compile Include="Modules\ModuleBase.cs" />
-    <Compile Include="Modules\ModuleStatus.cs" />
-    <Compile Include="Modules\ModuleUpdateAttribute.cs" />
-    <Compile Include="Modules\ModuleUpdateInfo.cs" />
-    <Compile Include="Modules\ModuleUpdateSource.cs" />
-    <Compile Include="Parenting\ChildObject.cs" />
-    <Compile Include="Parenting\ParentObject.cs" />
-    <Compile Include="Patching\Detours\DetourHandler.cs" />
-    <Compile Include="Patching\PatchAttribute.cs" />
-    <Compile Include="Patching\Patches.cs" />
-    <Compile Include="Patching\PatchDescriptor.cs" />
-    <Compile Include="Patching\Patcher.cs" />
-    <Compile Include="Patching\PatchFlags.cs" />
-    <Compile Include="Plugins\Plugin.cs" />
-    <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Pooling\Pools\DictionaryPool.cs" />
-    <Compile Include="Profiling\Events\EventProfiler.cs" />
-    <Compile Include="Profiling\Events\EventProfilerFrame.cs" />
-    <Compile Include="Profiling\Profiler.cs" />
-    <Compile Include="Profiling\ProfilerFrame.cs" />
-    <Compile Include="Profiling\ProfilerMode.cs" />
-    <Compile Include="Profiling\ProfilerPatcher.cs" />
-    <Compile Include="Profiling\ProfilerRecord.cs" />
-    <Compile Include="Profiling\ProfilerStamp.cs" />
-    <Compile Include="Profiling\ProfilerStat.cs" />
     <Compile Include="Results\ErrorResult.cs" />
     <Compile Include="Results\IResult.cs" />
     <Compile Include="Results\SuccessResult.cs" />
     <Compile Include="Utilities\AssertUtils.cs" />
     <Compile Include="Utilities\CommonRegex.cs" />
-    <Compile Include="Utilities\Delay.cs" />
     <Compile Include="Utilities\EnumUtils.cs" />
-    <Compile Include="Utilities\Patches\PropertyPatch.cs" />
     <Compile Include="Pooling\Exceptions\ConstructorFailedException.cs" />
     <Compile Include="Pooling\Exceptions\EmptyPoolException.cs" />
     <Compile Include="Pooling\Exceptions\ItemAlreadyReturnedException.cs" />
@@ -267,6 +185,7 @@
     <Compile Include="Values\IGetValue.cs" />
     <Compile Include="Values\ISetValue.cs" />
     <Compile Include="Values\IValue.cs" />
+    <Compile Include="Values\IWrapper.cs" />
     <Compile Include="Values\RecordedValue.cs" />
     <Compile Include="Values\ReferenceValue.cs" />
     <Compile Include="Values\WeakReferenceValue.cs" />
@@ -275,21 +194,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\Arguments\Restrictions\" />
-    <Folder Include="Events\Info\Items\" />
-    <Folder Include="Events\Info\Map\" />
-    <Folder Include="Events\Info\Player\" />
-    <Folder Include="Events\Info\Round\" />
-    <Folder Include="Events\Info\Server\" />
-    <Folder Include="Patching\Patches\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\API\API.csproj">
-      <Project>{3c5465b3-33fa-418a-bac6-c8692fc572ed}</Project>
-      <Name>API</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

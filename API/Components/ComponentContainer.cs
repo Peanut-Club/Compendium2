@@ -9,12 +9,26 @@ using UnityEngine;
 
 namespace Compendium.Components
 {
-    public class ComponentContainer
+    /// <summary>
+    /// Used for caching components of a specific <see cref="GameObject"/>.
+    /// </summary>
+    public class ComponentContainer : Disposable
     {
-        public GameObject Target { get; }
+        /// <summary>
+        /// Gets the <see cref="GameObject"/> this instance was initialized with.
+        /// </summary>
+        public GameObject Target { get; private set; }
 
-        public IReadOnlyDictionary<Type, Component> Components { get; }
+        /// <summary>
+        /// Gets an <see cref="IReadOnlyDictionary{TKey, TValue}"/> of all components present when initializing this instance.
+        /// </summary>
+        public IReadOnlyDictionary<Type, Component> Components { get; private set; }
 
+        /// <summary>
+        /// Initializes a new <see cref="ComponentContainer"/> instance.
+        /// </summary>
+        /// <param name="target">The <see cref="GameObject"/> instance to collect components of.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public ComponentContainer(GameObject target)
         {
             if (target is null)
@@ -33,10 +47,32 @@ namespace Compendium.Components
             DictionaryPool<Type, Component>.Shared.Return(dict);
         }
 
+        /// <summary>
+        /// Retrieves a component of the specified type from the container.
+        /// </summary>
+        /// <typeparam name="TComponent">The component type to retrieve.</typeparam>
+        /// <returns>The component instance, if found. Otherwise, <see cref="null"/>.</returns>
         public TComponent GetComponent<TComponent>() where TComponent : Component
             => TryGetComponent<TComponent>(out var comp) ? comp : null;
 
+        /// <summary>
+        /// Attempts to retrieve a component of the specified type from the container.
+        /// </summary>
+        /// <typeparam name="TComponent">The component type to retrieve.</typeparam>
+        /// <param name="component">The component instance, if found. Otherwise, null.</param>
+        /// <returns><see cref="true"/> if the component was found, otherwise <see cref="false"/>.</returns>
         public bool TryGetComponent<TComponent>(out TComponent component) where TComponent : Component
             => ((Components.TryGetValue(typeof(TComponent), out var comp) && comp is TComponent tComp) ? (component = tComp) : (component = null)) != null;
+
+        /// <summary>
+        /// Cleans up the container.
+        /// </summary>
+        public override void DisposeInternal()
+        {
+            base.DisposeInternal();
+
+            Target = null;
+            Components = null;
+        }
     }
 }
