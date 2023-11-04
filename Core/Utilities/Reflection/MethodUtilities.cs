@@ -1,10 +1,11 @@
 ﻿using Compendium.Logging;
 
-using HarmonyLib;
+using Fasterflect;
 
 using MonoMod.Utils;
 
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Compendium.Utilities.Reflection
@@ -13,58 +14,94 @@ namespace Compendium.Utilities.Reflection
     {
         public static readonly BindingFlags BindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
 
+        public static MethodInfo ToGeneric(this MethodInfo method, Type genericType)
+            => method.MakeGenericMethod(genericType);
+
+        public static MethodInfo ToGeneric<T>(this MethodInfo method)
+            => method.ToGeneric(typeof(T));
+
         public static MethodInfo[] GetAllMethods(this Type type)
-            => type.GetMethods(BindingFlags);
+            => type.Methods(Flags.AllMembers).ToArray();
 
-        public static object SafeCall(this FastDelegate fastDelegate, object target, params object[] args)
+        public static ParameterInfo[] Parameters(this MethodBase method)
+            => MethodInfoExtensions.Parameters(method).ToArray();
+
+        public static object Call(this MethodInfo method, object target, params object[] args)
+            => MethodInfoExtensions.Call(method, target, args);
+
+        public static object CallSafe(this MethodInfo method, object target, params object[] args)
         {
-            if (fastDelegate is null)
-                return null;
-
             try
             {
-                return fastDelegate(target, args);
-            }
+                return method.Call(target, args);
+            } 
             catch (Exception ex)
             {
-                Log.Critical($"Failed to call fast delegate handler '{fastDelegate.Method.ToName()}' due to an exception", ex);
+                Log.Error("Method Utilities", $"Failed to invoke method '{method.ToName()}' due to an exception", ex);
+                return null;
             }
-
-            return null;
         }
 
-        public static object SafeCall(this FastReflectionHelper.FastInvoker fastInvokeHandler, object target, object[] args)
-        {
-            if (fastInvokeHandler is null)
-                return null;
+        public static object CallStatic(this MethodInfo method, params object[] args)
+            => MethodInfoExtensions.Call(method, args);
 
+        public static object CallStaticSafe(this MethodInfo method, params object[] args)
+        {
             try
             {
-                return fastInvokeHandler(target, args);
+                return method.Call(args);
             }
             catch (Exception ex)
             {
-                Log.Critical($"Failed to call fast invocation handler '{fastInvokeHandler.Method.ToName()}' due to an exception", ex);
+                Log.Error("Method Utilities", $"Failed to invoke method '{method.ToName()}' due to an exception", ex);
+                return null;
             }
-
-            return null;
         }
 
-        public static object SafeCall(this FastInvokeHandler fastInvokeHandler, object target, object[] args)
+        public static T Call<T>(this MethodInfo method, object target, params object[] args)
         {
-            if (fastInvokeHandler is null)
-                return null;
+            var value = method.Call(target, args);
 
+            if (value is null || value is not T t)
+                return default;
+
+            return t;
+        }
+
+        public static T CallSafe<T>(this MethodInfo method, object target, params object[] args)
+        {
             try
             {
-                return fastInvokeHandler(target, args);
+                return method.Call<T>(target, args);
             }
             catch (Exception ex)
             {
-                Log.Critical($"Failed to call fast invocation handler '{fastInvokeHandler.Method.ToName()}' due to an exception", ex);
+                Log.Error("Method Utilities", $"Failed to invoke method '{method.ToName()}' due to an exception", ex);
+                return default;
             }
+        }
 
-            return null;
+        public static T CallStatic<T>(this MethodInfo method, params object[] args)
+        {
+            var value = method.Call(args);
+
+            if (value is null || value is not T t)
+                return default;
+
+            return t;
+        }
+
+        public static T CallStaticSafe<T>(this MethodInfo method, object target, params object[] args)
+        {
+            try
+            {
+                return method.CallStatic<T>(target, args);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Method Utilities", $"Failed to invoke method '{method.ToName()}' due to an exception", ex);
+                return default;
+            }
         }
 
         public static void SafeCall<T1, T2>(this Action<T1, T2> action, T1 t1, T2 t2)

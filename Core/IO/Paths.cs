@@ -19,12 +19,14 @@ namespace Compendium.IO
         public static Directory LogsDirectory { get; private set; }
         public static Directory CacheDirectory { get; private set; }
         public static Directory DataDirectory { get; private set; }
+        public static Directory DependencyDirectory { get; private set; }
 
         public static Directory GlobalConfigsDirectory { get; private set; }
         public static Directory GlobalPluginsDirectory { get; private set; }
         public static Directory GlobalLogsDirectory { get; private set; }
         public static Directory GlobalCacheDirectory { get; private set; }
         public static Directory GlobalDataDirectory { get; private set; }
+        public static Directory GlobalDependencyDirectory { get; private set; }
 
         public static event Action OnInitialized;
 
@@ -39,6 +41,14 @@ namespace Compendium.IO
         {
          
         };
+
+        public static Directory GetDirectory(string id, Directory server, Directory global)
+        {
+            if (ServerPaths.Contains(id))
+                return server;
+
+            return global;
+        }
 
         public static string GetPath(string name, string id, PathType type)
         {
@@ -59,6 +69,9 @@ namespace Compendium.IO
                 case PathType.Log:
                     return ((GlobalPaths.Contains("*") || GlobalPaths.Contains(id)) && !ServerPaths.Contains(id)) ? $"{GlobalLogsDirectory.Info.FullName}/{name}" : $"{LogsDirectory.Info.FullName}/{name}";
 
+                case PathType.Dependency:
+                    return ((GlobalPaths.Contains("*") || GlobalPaths.Contains(id)) && !ServerPaths.Contains(id)) ? $"{GlobalDependencyDirectory.Info.FullName}/{name}" : $"{DependencyDirectory.Info.FullName}/{name}";
+
                 default:
                     return $"{Directory.Info.FullName}/{name}";
             }
@@ -72,19 +85,21 @@ namespace Compendium.IO
             Directory = new Directory(System.IO.Directory.GetCurrentDirectory()).CheckExistance();
 
             ServerDirectory = new Directory($"{Directory.Info.FullName}/server_{ServerStatic.ServerPort}").CheckExistance();
-            GlobalDirectory = new Directory($"{Directory.Info.FullName}/global").CheckExistance();
+            GlobalDirectory = new Directory($"{Directory.Info.FullName}/server_global").CheckExistance();
 
             ConfigsDirectory = new Directory($"{ServerDirectory.Info.FullName}/configs").CheckExistance();
             PluginsDirectory = new Directory($"{ServerDirectory.Info.FullName}/plugins").CheckExistance();
             LogsDirectory = new Directory($"{ServerDirectory.Info.FullName}/logs").CheckExistance();
             CacheDirectory = new Directory($"{ServerDirectory.Info.FullName}/cache").CheckExistance();
             DataDirectory = new Directory($"{ServerDirectory.Info.FullName}/data").CheckExistance();
+            DependencyDirectory = new Directory($"{ServerDirectory.Info.FullName}/deps").CheckExistance();
 
             GlobalConfigsDirectory = new Directory($"{GlobalDirectory.Info.FullName}/configs").CheckExistance();
             GlobalPluginsDirectory = new Directory($"{GlobalDirectory.Info.FullName}/plugins").CheckExistance();
             GlobalLogsDirectory = new Directory($"{GlobalDirectory.Info.FullName}/logs").CheckExistance();
             GlobalDataDirectory = new Directory($"{GlobalDirectory.Info.FullName}/data").CheckExistance();
             GlobalCacheDirectory = new Directory($"{GlobalDirectory.Info.FullName}/cache").CheckExistance();
+            GlobalDependencyDirectory = new Directory($"{GlobalDirectory.Info.FullName}/deps").CheckExistance();
 
             OnInitialized.SafeCall();
         }

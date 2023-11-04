@@ -6,6 +6,7 @@
         Plugin,
         Config,
         Cache,
-        Data
+        Data,
+        Dependency
     }
 }

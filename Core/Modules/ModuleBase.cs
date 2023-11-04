@@ -197,7 +197,7 @@ namespace Compendium.Modules
             ChangeParent(parent, false);
 
             var type = GetType();
-            var updateMethod = type.GetMethod("OnUpdate");
+            var updateMethod = type.Method("OnUpdate");
 
             if (updateMethod is null || updateMethod.DeclaringType == typeof(ModuleBase))
                 return;

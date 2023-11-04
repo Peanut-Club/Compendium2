@@ -1,4 +1,6 @@
-﻿using Compendium.Extensions;
+﻿using Compendium.Logging;
+
+using Fasterflect;
 
 using System;
 using System.Linq;
@@ -8,39 +10,60 @@ namespace Compendium.Utilities.Reflection
 {
     public static class TypeUtilities
     {
+        public static Type ToGeneric(this Type type, Type genericType)
+            => type.MakeGenericType(genericType);
+
+        public static Type ToGeneric<T>(this Type type)
+            => type.MakeGenericType(typeof(T));
+
         public static MethodInfo Method(this Type type, string name)
-            => type.GetMethod(name, MethodUtilities.BindingFlags);
+            => MethodExtensions.Method(type, name, Flags.AllMembers);
 
         public static MethodInfo Method(this Type type, string name, params Type[] typeArguments)
-            => type.GetMethod(name, MethodUtilities.BindingFlags, null, typeArguments, null);
+            => MethodExtensions.Method(type, name, typeArguments, Flags.AllMembers);
 
-        public static MethodInfo Method(this Type type, string name, Type genericArg, params Type[] typeArguments)
-        {
-            var methods = type.GetAllMethods();
-
-            for (int i = 0; i < methods.Length; i++)
-            {
-                if (methods[i].Name != name)
-                    continue;
-
-                var typeArgs = methods[i].GetParameters().Select(p => p.ParameterType);
-
-                if (!typeArgs.IsMatch(typeArguments))
-                    continue;
-
-                var genericArgValue = methods[i].GetGenericArguments();
-
-                if (!genericArgValue.Contains(genericArg))
-                    continue;
-
-                return methods[i];
-            }
-
-            return null;
-        }
+        public static MethodInfo[] MethodsWithAttribute<T>(this Type type) where T : Attribute
+            => MethodUtilities.GetAllMethods(type).Where(m => m.IsDefined(typeof(T), false)).ToArray();
 
         public static ConstructorInfo[] GetAllConstructors(this Type type)
-            => type.GetConstructors(MethodUtilities.BindingFlags);
+            => type.Constructors(Flags.AllMembers).ToArray();
+
+        public static ConstructorInfo GetEmptyConstructor(this Type type)
+            => type.Constructors(Flags.AllMembers).FirstOrDefault(c => c.Parameters().Length <= 0);
+
+        public static ConstructorInfo GetConstructor(this Type type, params Type[] types)
+            => type.Constructor(Flags.AllMembers, types);
+
+        public static object Construct(this Type type, params object[] parameters)
+            => type.CreateInstance(parameters);
+
+        public static T Construct<T>(params object[] parameters)
+        {
+            var value = typeof(T).CreateInstance(parameters);
+
+            if (value is null || value is not T t)
+                return default;
+
+            return t;
+        }
+
+        public static T ConstructSafe<T>(params object[] parameters)
+        {
+            try
+            {
+                var value = typeof(T).CreateInstance(parameters);
+
+                if (value is null || value is not T t)
+                    return default;
+
+                return t;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Type Utilities", $"Failed to construct type '{typeof(T).ToName()}' due to an exception", ex);
+                return default;
+            }
+        }
 
         public static Type GetFirstGenericType(this Type type)
         {
@@ -59,71 +82,9 @@ namespace Compendium.Utilities.Reflection
             => type.IsSealed && type.IsAbstract;
 
         public static bool InheritsType<TType>(this Type type)
-            => type.InheritsType(typeof(TType));
+            => Fasterflect.TypeExtensions.InheritsOrImplements(type, typeof(TType));
 
         public static bool InheritsType(this Type type, Type inherit)
-        {
-            if (type is null)
-                throw new ArgumentNullException(nameof(type));
-
-            if (inherit is null)
-                throw new ArgumentNullException(nameof(inherit));
-
-            if (type.BaseType is null)
-                return false;
-
-            if (type.BaseType == inherit)
-                return true;
-
-            var baseType = type.BaseType;
-
-            while (baseType != null)
-            {
-                if (baseType == inherit)
-                    return true;
-
-                baseType = baseType.BaseType;
-            }
-
-            return false;
-        }
-
-        public static bool InheritsInterface<TInterface>(this Type type)
-        {
-            if (type is null)
-                throw new ArgumentNullException(nameof(type));
-
-            var intfType = typeof(TInterface);
-
-            if (!intfType.IsInterface)
-                throw new ArgumentException($"Type '{intfType.ToName()}' is not an interface.");
-
-            return type.InheritsInterface(intfType);
-        }
-
-        public static bool InheritsInterface(this Type type, Type interfaceType)
-        {
-            if (type is null)
-                throw new ArgumentNullException(nameof(type));
-
-            if (interfaceType is null)
-                throw new ArgumentNullException(nameof(interfaceType));
-
-            var interfaces = type.GetInterfaces();
-
-            if (interfaces.Length <= 0)
-                return false;
-
-            for (int i = 0; i < interfaces.Length; i++)
-            {
-                if (interfaces[i] == interfaceType)
-                    return true;
-
-                if (interfaces[i].InheritsInterface(interfaceType))
-                    return true;
-            }
-
-            return false;
-        }
+            => Fasterflect.TypeExtensions.InheritsOrImplements(type, inherit);
     }
 }

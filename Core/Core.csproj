@@ -45,6 +45,9 @@
     <Reference Include="Assembly-CSharp_publicized">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Assembly-CSharp_publicized.dll</HintPath>
     </Reference>
+    <Reference Include="Fasterflect, Version=3.0.0.0, Culture=neutral, PublicKeyToken=38d18473284c1ca7, processorArchitecture=MSIL">
+      <HintPath>..\packages\fasterflect.3.0.0\lib\netstandard20\netstandard20\Fasterflect.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -111,8 +114,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assemblies\AssemblyDependency.cs" />
-    <Compile Include="Assemblies\AssemblyReference.cs" />
+    <Compile Include="Assemblies\LoadedAssembly.cs" />
     <Compile Include="Callbacks\CallbackAttribute.cs" />
     <Compile Include="Callbacks\LoadCallbackAttribute.cs" />
     <Compile Include="Callbacks\ReloadCallbackAttribute.cs" />
@@ -204,10 +206,6 @@
     <Compile Include="Modules\ModuleUpdateAttribute.cs" />
     <Compile Include="Modules\ModuleUpdateInfo.cs" />
     <Compile Include="Modules\ModuleUpdateSource.cs" />
-    <Compile Include="Packaging\IPackage.cs" />
-    <Compile Include="Packaging\Packager.cs" />
-    <Compile Include="Packaging\IPackageReader.cs" />
-    <Compile Include="Packaging\IPackageWriter.cs" />
     <Compile Include="Parenting\ChildObject.cs" />
     <Compile Include="Parenting\ParentObject.cs" />
     <Compile Include="Patching\Detours\DetourHandler.cs" />
@@ -216,14 +214,8 @@
     <Compile Include="Patching\PatchDescriptor.cs" />
     <Compile Include="Patching\Patcher.cs" />
     <Compile Include="Patching\PatchFlags.cs" />
-    <Compile Include="Plugins\Packaging\PackagedAssembly.cs" />
-    <Compile Include="Plugins\Packaging\AssemblyPackager.cs" />
-    <Compile Include="Plugins\PluginAttribute.cs" />
-    <Compile Include="Plugins\PluginDescriptor.cs" />
+    <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
-    <Compile Include="Plugins\PluginMetadata.cs" />
-    <Compile Include="Plugins\PluginSymbols.cs" />
-    <Compile Include="Plugins\PluginVersion.cs" />
     <Compile Include="Pooling\Pools\DictionaryPool.cs" />
     <Compile Include="Profiling\Events\EventProfiler.cs" />
     <Compile Include="Profiling\Events\EventProfilerFrame.cs" />
@@ -238,11 +230,8 @@
     <Compile Include="Results\IResult.cs" />
     <Compile Include="Results\SuccessResult.cs" />
     <Compile Include="Utilities\AssertUtils.cs" />
-    <Compile Include="Utilities\Calls\CallFlags.cs" />
-    <Compile Include="Utilities\Calls\CallInfo.cs" />
     <Compile Include="Utilities\CommonRegex.cs" />
     <Compile Include="Utilities\Delay.cs" />
-    <Compile Include="Utilities\DependencyUtils.cs" />
     <Compile Include="Utilities\EnumUtils.cs" />
     <Compile Include="Utilities\Patches\PropertyPatch.cs" />
     <Compile Include="Pooling\Exceptions\ConstructorFailedException.cs" />
@@ -263,7 +252,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ArrayUtils.cs" />
     <Compile Include="Utilities\Reflection\AssemblyUtilities.cs" />
-    <Compile Include="Utilities\Reflection\FastReflection.cs" />
     <Compile Include="Utilities\ResultUtils.cs" />
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\RandomGeneration.cs" />

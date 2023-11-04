@@ -1,5 +1,4 @@
-﻿using Compendium.Callbacks;
-using Compendium.Logging;
+﻿using Compendium.Logging;
 using Compendium.Logging.Formatting;
 
 using HarmonyLib;
