@@ -1,4 +1,0 @@
-﻿namespace Compendium.Values
-{
-    public interface IValue<TValue> : ISetValue<TValue>, IGetValue<TValue> { }
-}
