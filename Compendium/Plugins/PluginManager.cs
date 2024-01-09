@@ -327,7 +327,7 @@ namespace Compendium.Plugins
             }
 
             if (reloadMethod != null && !reloadMethod.TryCreateDelegate(instance, out reload))
-                Log.Error($"Failed to create a RELOAD delegate of method '{unloadMethod.ToName()}'");
+                Log.Warn($"Failed to create a RELOAD delegate of method '{unloadMethod.ToName()}'");
 
             if (unloadMethod != null && !unloadMethod.TryCreateDelegate(instance, out unload))
                 Log.Warn($"Failed to create a UNLOAD delegate of method '{unloadMethod.ToName()}'");

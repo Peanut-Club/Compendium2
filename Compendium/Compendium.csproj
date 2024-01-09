@@ -49,6 +49,9 @@
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>
     </Reference>
+    <Reference Include="Pooling">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Pooling.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -71,6 +74,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Extensions\QuaternionExtensions.cs" />
+    <Compile Include="API\Extensions\ReferenceHubExtensions.cs" />
+    <Compile Include="API\Inventory\InventoryManager.cs" />
+    <Compile Include="API\Inventory\InventoryObject.cs" />
+    <Compile Include="API\Inventory\InventoryUtils.cs" />
+    <Compile Include="API\Inventory\InventoryItems\InventoryItem.cs" />
+    <Compile Include="API\Inventory\WorldItems\WorldItem.cs" />
+    <Compile Include="API\Player.cs" />
+    <Compile Include="API\Roles\Role.cs" />
+    <Compile Include="API\Roles\RoleManager.cs" />
+    <Compile Include="API\Roles\RoleUtils.cs" />
+    <Compile Include="API\Units\Unit.cs" />
+    <Compile Include="API\Units\UnitManager.cs" />
+    <Compile Include="API\UserId.cs" />
+    <Compile Include="API\Extensions\ItemTypeExtensions.cs" />
+    <Compile Include="Ipc\IpcManager.cs" />
+    <Compile Include="Ipc\IpcMethod.cs" />
+    <Compile Include="Ipc\IpcObject.cs" />
+    <Compile Include="Patches\Functions\Inventory\UpdateItemListPatch.cs" />
+    <Compile Include="Patches\Functions\Inventory\UpdateItemOwnerPatch.cs" />
+    <Compile Include="Patches\Functions\Roles\UpdateRolePatch.cs" />
+    <Compile Include="Patches\Functions\Units\UpdateUnitListPatch.cs" />
     <Compile Include="Plugins\DependencyManager.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginAttribute.cs" />
