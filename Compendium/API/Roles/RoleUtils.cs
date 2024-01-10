@@ -1,4 +1,5 @@
 ﻿using Common.Logging;
+using Common.Extensions;
 
 using CustomPlayerEffects;
 
@@ -7,12 +8,11 @@ using GameObjectPools;
 using PlayerRoles;
 
 using System;
+using System.Reflection;
 
 using UnityEngine;
 
 using CentralAuth;
-using Common.Extensions;
-using System.Reflection;
 
 namespace Compendium.API.Roles
 {

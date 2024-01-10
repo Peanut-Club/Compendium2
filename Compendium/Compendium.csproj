@@ -74,6 +74,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Data\PlayerData.cs" />
+    <Compile Include="API\Data\PlayerDataManager.cs" />
+    <Compile Include="API\Effects\EffectManager.cs" />
     <Compile Include="API\Extensions\QuaternionExtensions.cs" />
     <Compile Include="API\Extensions\ReferenceHubExtensions.cs" />
     <Compile Include="API\Inventory\InventoryManager.cs" />
@@ -85,6 +88,10 @@
     <Compile Include="API\Roles\Role.cs" />
     <Compile Include="API\Roles\RoleManager.cs" />
     <Compile Include="API\Roles\RoleUtils.cs" />
+    <Compile Include="API\Tokens\AuthToken.cs" />
+    <Compile Include="API\Tokens\BadgeToken.cs" />
+    <Compile Include="API\Tokens\IToken.cs" />
+    <Compile Include="API\Tokens\TokenUsage.cs" />
     <Compile Include="API\Units\Unit.cs" />
     <Compile Include="API\Units\UnitManager.cs" />
     <Compile Include="API\UserId.cs" />

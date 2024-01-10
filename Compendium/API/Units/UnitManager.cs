@@ -32,6 +32,20 @@ namespace Compendium.API.Units
         public static Unit Get(string name)
             => allUnits.FirstOrDefault(un => un.Name.ToLower() == name.ToLower());
 
+        public static void Assign(Player player, Unit unit)
+        {
+            player.ntfUnit?.players.Remove(player);
+            player.ntfUnit = unit;
+
+            if (unit is null || !allUnits.Contains(unit))
+            {
+                player.ntfUnit = null;
+                return;
+            }
+
+            player.ntfUnit?.players.Add(player);
+        }
+
         public static string GetNewUnitName()
         {
             if (!UnitNamingRule.TryGetNamingRule(SpawnableTeamType.NineTailedFox, out var namingRule) || namingRule is not NineTailedFoxNamingRule ntfRule)
@@ -67,6 +81,8 @@ namespace Compendium.API.Units
 
             if (!unit.players.Contains(player))
                 unit.players.Add(player);
+
+            player.ntfUnit = unit;
         }
 
         private static void OnRoleChanged(ReferenceHub hub, PlayerRoleBase prevRole, PlayerRoleBase newRole)
@@ -83,6 +99,8 @@ namespace Compendium.API.Units
 
                 if (unit != null)
                     unit.players.Remove(player);
+
+                player.ntfUnit = null;
             }
         }
     }
