@@ -74,40 +74,50 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Data\PlayerData.cs" />
-    <Compile Include="API\Data\PlayerDataManager.cs" />
-    <Compile Include="API\Effects\EffectManager.cs" />
+    <Compile Include="API\Doors\DoorType.cs" />
+    <Compile Include="API\Doors\IDoor.cs" />
     <Compile Include="API\Extensions\QuaternionExtensions.cs" />
     <Compile Include="API\Extensions\ReferenceHubExtensions.cs" />
-    <Compile Include="API\Inventory\InventoryManager.cs" />
-    <Compile Include="API\Inventory\InventoryObject.cs" />
-    <Compile Include="API\Inventory\InventoryUtils.cs" />
-    <Compile Include="API\Inventory\InventoryItems\InventoryItem.cs" />
-    <Compile Include="API\Inventory\WorldItems\WorldItem.cs" />
-    <Compile Include="API\Player.cs" />
+    <Compile Include="API\Inventory\IInventoryManager.cs" />
+    <Compile Include="API\Nicknames\INicknameManager.cs" />
+    <Compile Include="API\Players\IPlayer.cs" />
+    <Compile Include="API\Players\IPlayerModule.cs" />
+    <Compile Include="API\Players\IPlayerPosition.cs" />
+    <Compile Include="API\Players\Player.cs" />
+    <Compile Include="API\Players\PlayerModifiers.cs" />
+    <Compile Include="API\Players\PlayerNameManager.cs" />
+    <Compile Include="API\Players\PlayerPositionManager.cs" />
+    <Compile Include="API\Roles\IRoleManager.cs" />
     <Compile Include="API\Roles\Role.cs" />
-    <Compile Include="API\Roles\RoleManager.cs" />
-    <Compile Include="API\Roles\RoleUtils.cs" />
+    <Compile Include="API\Rooms\IRoom.cs" />
+    <Compile Include="API\Rooms\RoomType.cs" />
     <Compile Include="API\Tokens\AuthToken.cs" />
     <Compile Include="API\Tokens\BadgeToken.cs" />
     <Compile Include="API\Tokens\IToken.cs" />
     <Compile Include="API\Tokens\TokenUsage.cs" />
-    <Compile Include="API\Units\Unit.cs" />
-    <Compile Include="API\Units\UnitManager.cs" />
-    <Compile Include="API\UserId.cs" />
+    <Compile Include="API\Translations\ITranslationElement.cs" />
+    <Compile Include="API\UserId\UserIdType.cs" />
+    <Compile Include="API\UserId\UserIdValue.cs" />
     <Compile Include="API\Extensions\ItemTypeExtensions.cs" />
-    <Compile Include="Ipc\IpcManager.cs" />
-    <Compile Include="Ipc\IpcMethod.cs" />
-    <Compile Include="Ipc\IpcObject.cs" />
-    <Compile Include="Patches\Functions\Inventory\UpdateItemListPatch.cs" />
-    <Compile Include="Patches\Functions\Inventory\UpdateItemOwnerPatch.cs" />
-    <Compile Include="Patches\Functions\Roles\UpdateRolePatch.cs" />
-    <Compile Include="Patches\Functions\Units\UpdateUnitListPatch.cs" />
+    <Compile Include="API\Utilities\ClientRotation.cs" />
+    <Compile Include="API\Utilities\RaycastUtils.cs" />
+    <Compile Include="API\Waypoints\IWaypoint.cs" />
+    <Compile Include="API\Waypoints\WaypointType.cs" />
+    <Compile Include="API\Zones\IZone.cs" />
+    <Compile Include="API\Zones\ZoneType.cs" />
+    <Compile Include="API\Map\FacilityMap.cs" />
+    <Compile Include="API\Map\IFacilityElement.cs" />
     <Compile Include="Plugins\DependencyManager.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginAttribute.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="API\Roles\Humans\" />
+    <Folder Include="API\Roles\Other\" />
+    <Folder Include="API\Roles\Scps\" />
+    <Folder Include="Patches\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

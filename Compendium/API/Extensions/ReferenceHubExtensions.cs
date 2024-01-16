@@ -23,5 +23,17 @@ namespace Compendium.API.Extensions
 
             return hub.PlayerCameraReference.rotation;
         }
+
+        public static bool TryGetFpmm(this ReferenceHub hub, out FirstPersonMovementModule fpmm)
+        {
+            if (hub.roleManager.CurrentRole is null || hub.roleManager.CurrentRole is not IFpcRole fpcRole || fpcRole.FpcModule is null || !fpcRole.FpcModule.ModuleReady)
+            {
+                fpmm = null;
+                return false;
+            }
+
+            fpmm = fpcRole.FpcModule;
+            return true;
+        }
     }
 }
