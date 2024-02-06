@@ -52,9 +52,10 @@ namespace Compendium.API.Utilities
             return ServerSendSync<TRoutine>(player, routineOwner, routineData, role);
         }
 
-        public static bool ServerSendSync<TRoutine>(this ReferenceHub player, ReferenceHub routineOwner = null, NetworkWriter routineData = null, RoleTypeId? role = null) where TRoutine : SubroutineBase
+        public static bool ServerSendSync<TRoutine>(this ReferenceHub player, ReferenceHub routineOwner = null, NetworkWriter routineData = null, RoleTypeId? role = null, int routineIndex = -1) where TRoutine : SubroutineBase
         {
-            var routineIndex = GetSyncIndex<TRoutine>();
+            if (routineIndex < 0)
+                routineIndex = GetSyncIndex<TRoutine>();
 
             if (routineIndex < 0)
                 return false;

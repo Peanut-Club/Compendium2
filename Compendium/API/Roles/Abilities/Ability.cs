@@ -13,9 +13,12 @@ namespace Compendium.API.Roles.Abilities
         {
             Player = player;
             Base = ability;
+            IsEnabled = true;
         }
 
         public Player Player { get; }
         public TAbility Base { get; }
+
+        public bool IsEnabled { get; set; }
     }
 }

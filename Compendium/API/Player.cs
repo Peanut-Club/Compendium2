@@ -1,9 +1,17 @@
 ﻿using Common.Values;
+using Common.Utilities;
 using Common.Extensions;
 
 using Compendium.API.UserId;
 using Compendium.API.Utilities;
 using Compendium.API.Modules;
+
+using Compendium.API.Roles;
+using Compendium.API.Roles.Interfaces;
+
+using Compendium.API.GameModules.FirstPerson;
+using Compendium.API.GameModules.Subroutines;
+using Compendium.API.GameModules.Stats;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +22,9 @@ using PlayerRoles.FirstPersonControl;
 using PlayerRoles.Spectating;
 using PlayerRoles.RoleAssign;
 
-using CentralAuth;
-
 using UnityEngine;
 
 using PluginAPI.Core;
-
-using PlayerStatsSystem;
 
 using InventorySystem.Disarming;
 
@@ -33,13 +37,7 @@ using LiteNetLib;
 using Mirror.LiteNetLib4Mirror;
 
 using CustomPlayerEffects;
-
-using Common.Utilities;
-using Compendium.API.Roles;
-using Compendium.API.Roles.Interfaces;
-using Compendium.API.GameModules.FirstPerson;
-using Compendium.API.GameModules.Subroutines;
-using PlayerRoles.Subroutines;
+using CentralAuth;
 
 namespace Compendium.API
 {
@@ -67,8 +65,6 @@ namespace Compendium.API
         public static Player Get(ReferenceHub hub)
             => players.FirstOrDefault(p => p.Base == hub);
 
-        private AdminFlagsStat flagsStat;
-
         public Player(GameObject hubGo)
             : this(ReferenceHub.GetHub(hubGo))
         { }
@@ -79,7 +75,7 @@ namespace Compendium.API
                 throw new ArgumentNullException(nameof(hub));
 
             Base = hub;
-            flagsStat = hub.playerStats.GetModule<AdminFlagsStat>();
+            GameObject = hub.gameObject;
 
             UserId = new UserIdValue(Base.authManager.UserId);
 
@@ -91,16 +87,15 @@ namespace Compendium.API
             if (Base.authManager.AuthenticationResponse.BadgeToken != null)
                 BadgeToken = new Tokens.BadgeToken(Base.authManager.AuthenticationResponse.SignedBadgeToken, Base.authManager.AuthenticationResponse.BadgeToken);
 
-            if (hub.Mode is ClientInstanceMode.DedicatedServer)
-                Server = this;
-            else if (hub.Mode is ClientInstanceMode.Host)
-                Host = this;
+            Stats = Add<StatManager>();
+            Subroutines = Add<SubroutineManager>();
 
             players.Add(this);
         }
 
         public ReferenceHub Base { get; }
         public UserIdValue UserId { get; }
+        public GameObject GameObject { get; }
         public NetPeer Peer { get; }
 
         public Tokens.AuthToken AuthToken { get; }
@@ -108,6 +103,7 @@ namespace Compendium.API
 
         public FirstPersonModule FirstPerson { get; private set; }
         public SubroutineManager Subroutines { get; private set; }
+        public StatManager Stats { get; private set; }
         public Role Role { get; private set; }
 
         public IFirstPersonRole FirstPersonRole { get; private set; }
@@ -213,9 +209,18 @@ namespace Compendium.API
             set => Base.serverRoles.Permissions = (ulong)value;
         }
 
+        public ClientInstanceMode InstanceMode
+        {
+            get => Base.authManager.InstanceMode;
+            set => Base.authManager.InstanceMode = value;
+        }
+   
+        public ClientInstanceMode? ForcedInstanceMode { get; set; }
+
         public byte KickPower
         {
             get => Base.serverRoles.KickPower;
+            set => Base.serverRoles.Group!.KickPower = value;
         }
 
         public int PlayerId
@@ -310,18 +315,22 @@ namespace Compendium.API
         public bool IsCuffed
         {
             get => DisarmedPlayers.Entries.Any(entry => entry.DisarmedPlayer == NetworkId);
-            set
-            {
-                if (value)
-                    Base.inventory.SetDisarmedStatus(ReferenceHub.LocalHub.inventory);
-                else
-                    Base.inventory.SetDisarmedStatus(null);
-            }
+            set => CodeUtils.InlinedElse(value, true, () => Base.inventory.SetDisarmedStatus(ReferenceHub.LocalHub.inventory), () => Base.inventory.SetDisarmedStatus(null), null, null);
         }
 
         public bool IsHost
         {
             get => Base.isLocalPlayer;
+        }
+
+        public bool IsReady
+        {
+            get => InstanceMode is ClientInstanceMode.ReadyClient && GameObject != null;
+        }
+
+        public bool IsOnline
+        {
+            get => GameObject != null;
         }
 
         public bool IsNorthwoodStaff
@@ -376,8 +385,8 @@ namespace Compendium.API
 
         public bool HasNoClipEnabled
         {
-            get => flagsStat?.HasFlag(AdminFlags.Noclip) ?? false;
-            set => flagsStat?.SetFlag(AdminFlags.Noclip, value);
+            get => Stats.AdminFlags.IsNoClip;
+            set => Stats.AdminFlags.IsNoClip = value;
         }
 
         public bool HasNoClipPermission
@@ -432,6 +441,15 @@ namespace Compendium.API
         public bool IsSpectatedBy(Player target)
             => target != null && target != this && Base.IsSpectatedBy(target.Base);
 
+        public bool IsSpectating(Player target)
+            => target != null && target != this && target.Base.IsSpectatedBy(Base);
+
+        public void OpenRemoteAdmin()
+            => Base.serverRoles.OpenRemoteAdmin();
+
+        public void CloseRemoteAdmin()
+            => Base.serverRoles.TargetSetRemoteAdmin(false);
+
         internal void UpdateRole()
         {
             Role = Role.Create(Base.roleManager.CurrentRole);
@@ -448,15 +466,9 @@ namespace Compendium.API
             }
 
             if (Role is ISubroutineRole subroutineRole)
-            {
                 SubroutineRole = subroutineRole;
-                Subroutines = subroutineRole.Subroutines;
-            }
             else
-            {
                 SubroutineRole = null;
-                Subroutines = null;
-            }
 
             if (Role is IPositionalRole positionalRole)
                 PositionalRole = positionalRole;

@@ -1,24 +1,44 @@
 ﻿using Common.Values;
 
+using Compendium.API.GameModules.FirstPerson;
 using Compendium.API.GameModules.Subroutines;
+
 using Compendium.API.Roles.Interfaces;
+using Compendium.API.Roles.Spawnpoints;
 
 using PlayerRoles;
+using PlayerRoles.Ragdolls;
 using PlayerRoles.Subroutines;
+using PlayerRoles.FirstPersonControl;
 
 namespace Compendium.API.Roles.Other
 {
-    public class SubroutinedRole : Role, ISubroutineRole, IWrapper<ISubroutinedRole>
+    public class SubroutinedRole : Role, IFirstPersonRole, ISubroutineRole, IWrapper<ISubroutinedRole>
     {
         public SubroutinedRole(ISubroutinedRole subroutinedRole) : base((PlayerRoleBase)subroutinedRole)
         {
             Base = subroutinedRole;
+            FpcBase = (FpcStandardRoleBase)subroutinedRole;
 
-            Subroutines = Player.Add<SubroutineManager>();
+            Subroutines = Player.Get<SubroutineManager>();
             Subroutines.Initialize(subroutinedRole.SubroutineModule, Player);
+
+            Module = new FirstPersonModule(FpcBase.FpcModule);
+
+            SpawnPoint = Spawnpoints.SpawnPoint.Get(Module.Position, FpcBase.SpawnpointHandler);
         }
 
+        public FirstPersonModule Module { get; }
+        public FpcStandardRoleBase FpcBase { get; }
+
+        public ISpawnPoint SpawnPoint { get; }
+
         public new ISubroutinedRole Base { get; }
+
+        public BasicRagdoll RagdollPrefab
+        {
+            get => FpcBase.Ragdoll;
+        }
 
         public SubroutineManager Subroutines { get; }
 

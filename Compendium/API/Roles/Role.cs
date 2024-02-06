@@ -3,6 +3,7 @@
 using Compendium.API.Roles.Faking;
 
 using PlayerRoles;
+using PlayerRoles.PlayableScps.Scp049;
 
 using System;
 
@@ -17,15 +18,12 @@ namespace Compendium.API.Roles
         public Role(PlayerRoleBase roleBase)
         {
             roleBase.TryGetOwner(out roleBase._lastOwner);
-
             roleOwner = Player.Get(roleBase._lastOwner);
 
             Base = roleBase;
 
             FakedRole = new FakedRoleList();
             FakedRole.Target = Player;
-
-            OnInitialized();
         }
 
         public PlayerRoleBase Base { get; }
@@ -86,6 +84,7 @@ namespace Compendium.API.Roles
         public RoleTypeId Type
         {
             get => Base.RoleTypeId;
+            set => Set(value, RoleSpawnFlags.None, RoleChangeReason.RemoteAdmin);
         }
 
         public Team Team
@@ -108,14 +107,27 @@ namespace Compendium.API.Roles
             get => TimeSpan.FromSeconds(Base.ActiveTime);
         }
 
-        internal virtual void OnInitialized() { }
+        public void Set(RoleTypeId role, RoleSpawnFlags spawnFlags = RoleSpawnFlags.All, RoleChangeReason changeReason = RoleChangeReason.RemoteAdmin)
+            => Player.Base.roleManager.ServerSetRole(role, changeReason, spawnFlags);
 
         public static Role Create(PlayerRoleBase playerRoleBase)
             => Create<Role>(playerRoleBase);
 
         public static TRole Create<TRole>(PlayerRoleBase playerRoleBase) where TRole : Role
         {
+            Role role = null;
 
+            switch (playerRoleBase)
+            {
+                case Scp049Role scp049Role:
+                    role = new Scp049.Scp049(scp049Role);
+                    break;
+            }
+
+            if (role != null)
+                return (TRole)role;
+
+            return default;
         }
     }
 }

@@ -4,6 +4,7 @@ using Common.Values;
 
 using Compendium.API.Modules;
 using Compendium.API.Roles.Scp0492.Abilities;
+
 using PlayerRoles.PlayableScps.Scp049.Zombies;
 using PlayerRoles.Subroutines;
 
@@ -25,7 +26,7 @@ namespace Compendium.API.GameModules.Subroutines
         }
 
         public override ModuleUpdate OnStart()
-            => new ModuleUpdate("OnUpdate", 5, false, false);
+            => new ModuleUpdate("OnUpdate", 10, false, false);
 
         public TRoutine Add<TRoutine>() where TRoutine : ICustomSubroutine
         {
@@ -83,6 +84,25 @@ namespace Compendium.API.GameModules.Subroutines
 
         internal void Initialize(SubroutineManagerModule subroutineManagerModule, Player player)
         {
+            if (Subroutines != null)
+            {
+                for (int i = 0; i < Subroutines.Count; i++)
+                {
+                    if (Subroutines[i] is ICustomSubroutine customSubroutine)
+                    {
+                        try
+                        {
+                            customSubroutine.Destroy();
+                            customSubroutine.Player = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"An error occured while attempting to stop subroutine '{customSubroutine.GetType().FullName}':\n{ex}");
+                        }
+                    }
+                }
+            }
+
             Base = subroutineManagerModule;
             Player = player;
 
@@ -160,6 +180,15 @@ namespace Compendium.API.GameModules.Subroutines
 
                 case ZombieAttackAbility zombieAttackAbility:
                     return new Scp0492AttackAbility(Player, zombieAttackAbility);
+
+                case ZombieAudioPlayer zombieAudioPlayer:
+                    return new Scp0492AudioPlayer(Player, zombieAudioPlayer);
+
+                case ZombieBloodlustAbility zombieBloodlustAbility:
+                    return new Scp0492BloodlustAbility(Player, zombieBloodlustAbility);
+
+                case ZombieConsumeAbility zombieConsumeAbility:
+                    return new Scp0492ConsumeAbility(Player, zombieConsumeAbility);
 
                 default:
                     Log.Warn($"Unknown base-game subroutine! {subroutineBase.GetType().FullName}");
