@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,6 +50,9 @@
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>
     </Reference>
+    <Reference Include="PluginAPI-publicized">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\PluginAPI-publicized.dll</HintPath>
+    </Reference>
     <Reference Include="Pooling">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Pooling.dll</HintPath>
     </Reference>
@@ -74,39 +78,63 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Doors\DoorType.cs" />
-    <Compile Include="API\Doors\IDoor.cs" />
     <Compile Include="API\Extensions\QuaternionExtensions.cs" />
     <Compile Include="API\Extensions\ReferenceHubExtensions.cs" />
-    <Compile Include="API\Inventory\IInventoryManager.cs" />
-    <Compile Include="API\Nicknames\INicknameManager.cs" />
-    <Compile Include="API\Players\IPlayer.cs" />
-    <Compile Include="API\Players\IPlayerModule.cs" />
-    <Compile Include="API\Players\IPlayerPosition.cs" />
-    <Compile Include="API\Players\Player.cs" />
-    <Compile Include="API\Players\PlayerModifiers.cs" />
-    <Compile Include="API\Players\PlayerNameManager.cs" />
-    <Compile Include="API\Players\PlayerPositionManager.cs" />
-    <Compile Include="API\Roles\IRoleManager.cs" />
+    <Compile Include="API\Extensions\Scp0492AudioExtensions.cs" />
+    <Compile Include="API\Extensions\TeamExtensions.cs" />
+    <Compile Include="API\Faking\FakedList.cs" />
+    <Compile Include="API\GameModules\FirstPerson\FirstPersonCamera.cs" />
+    <Compile Include="API\GameModules\FirstPerson\FirstPersonModule.cs" />
+    <Compile Include="API\GameModules\FirstPerson\FirstPersonMotor.cs" />
+    <Compile Include="API\GameModules\FirstPerson\FirstPersonNoClip.cs" />
+    <Compile Include="API\GameModules\HumeShield\HumeShieldManager.cs" />
+    <Compile Include="API\GameModules\Subroutines\ICustomSubroutine.cs" />
+    <Compile Include="API\GameModules\Subroutines\IGameSubroutine.cs" />
+    <Compile Include="API\GameModules\Subroutines\ISubroutine.cs" />
+    <Compile Include="API\GameModules\Subroutines\SubroutineManager.cs" />
+    <Compile Include="API\Invisibility\InvisibilityList.cs" />
+    <Compile Include="API\Modules\ModuleBase.cs" />
+    <Compile Include="API\Modules\ModuleManager.cs" />
+    <Compile Include="API\Modules\ModuleUpdate.cs" />
+    <Compile Include="API\Player.cs" />
+    <Compile Include="API\Roles\Abilities\Ability.cs" />
+    <Compile Include="API\Roles\Abilities\AttackAbility.cs" />
+    <Compile Include="API\Roles\Faking\FakedRoleList.cs" />
+    <Compile Include="API\Roles\Interfaces\ICameraRole.cs" />
+    <Compile Include="API\Roles\Interfaces\IFirstPersonRole.cs" />
+    <Compile Include="API\Roles\Interfaces\IHumeShieldRole.cs" />
+    <Compile Include="API\Roles\Interfaces\IPositionalRole.cs" />
+    <Compile Include="API\Roles\Interfaces\ISpawnPointRole.cs" />
+    <Compile Include="API\Roles\Interfaces\ISubroutineRole.cs" />
+    <Compile Include="API\Roles\Other\FirstPersonRole.cs" />
+    <Compile Include="API\Roles\Other\SubroutinedFirstPersonRole.cs" />
+    <Compile Include="API\Roles\Other\SubroutinedRole.cs" />
     <Compile Include="API\Roles\Role.cs" />
-    <Compile Include="API\Rooms\IRoom.cs" />
-    <Compile Include="API\Rooms\RoomType.cs" />
+    <Compile Include="API\Roles\Scp0492\Abilities\Scp0492AttackAbility.cs" />
+    <Compile Include="API\Roles\Scp0492\Abilities\Scp0492AudioPlayer.cs" />
+    <Compile Include="API\Roles\Scp0492\Abilities\Scp0492AudioType.cs" />
+    <Compile Include="API\Roles\Scp049\Abilities\Scp049AttackAbility.cs" />
+    <Compile Include="API\Roles\Scp049\Abilities\Scp049CallAbility.cs" />
+    <Compile Include="API\Roles\Abilities\RagdollAbility.cs" />
+    <Compile Include="API\Roles\Scp049\Abilities\Scp049ResurrectAbility.cs" />
+    <Compile Include="API\Roles\Scp049\Abilities\Scp049SenseAbility.cs" />
+    <Compile Include="API\Roles\Scp049\Scp049.cs" />
+    <Compile Include="API\Roles\Spawnpoints\BoundSpawnPoint.cs" />
+    <Compile Include="API\Roles\Spawnpoints\ISpawnPoint.cs" />
+    <Compile Include="API\Roles\Spawnpoints\RoomSpawnPoint.cs" />
+    <Compile Include="API\Roles\Spawnpoints\SpawnPoint.cs" />
     <Compile Include="API\Tokens\AuthToken.cs" />
     <Compile Include="API\Tokens\BadgeToken.cs" />
     <Compile Include="API\Tokens\IToken.cs" />
     <Compile Include="API\Tokens\TokenUsage.cs" />
-    <Compile Include="API\Translations\ITranslationElement.cs" />
     <Compile Include="API\UserId\UserIdType.cs" />
     <Compile Include="API\UserId\UserIdValue.cs" />
     <Compile Include="API\Extensions\ItemTypeExtensions.cs" />
+    <Compile Include="API\Utilities\CameraUtils.cs" />
+    <Compile Include="API\Utilities\CustomInfoUtils.cs" />
+    <Compile Include="API\Utilities\SubroutineUtils.cs" />
     <Compile Include="API\Utilities\ClientRotation.cs" />
     <Compile Include="API\Utilities\RaycastUtils.cs" />
-    <Compile Include="API\Waypoints\IWaypoint.cs" />
-    <Compile Include="API\Waypoints\WaypointType.cs" />
-    <Compile Include="API\Zones\IZone.cs" />
-    <Compile Include="API\Zones\ZoneType.cs" />
-    <Compile Include="API\Map\FacilityMap.cs" />
-    <Compile Include="API\Map\IFacilityElement.cs" />
     <Compile Include="Plugins\DependencyManager.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginAttribute.cs" />
@@ -114,9 +142,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="API\Roles\Humans\" />
-    <Folder Include="API\Roles\Other\" />
-    <Folder Include="API\Roles\Scps\" />
+    <Folder Include="Events\" />
     <Folder Include="Patches\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

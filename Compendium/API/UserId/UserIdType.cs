@@ -6,5 +6,6 @@
         Northwood,
         Discord,
         Steam,
+        Unknown,
     }
 }

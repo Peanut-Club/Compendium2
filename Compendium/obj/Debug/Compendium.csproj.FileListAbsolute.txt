@@ -1,0 +1,2 @@
+C:\Users\drgas\source\repos\Compendium2\Compendium\obj\Debug\Compendium.csproj.AssemblyReference.cache
+C:\Users\drgas\source\repos\Compendium2\Compendium\obj\Debug\Compendium.csproj.CoreCompileInputs.cache

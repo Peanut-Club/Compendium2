@@ -19,9 +19,10 @@ namespace Compendium.Plugins
 
         public static Assembly Assembly { get; }
         public static AssemblyName AssemblyName { get; }
+
         public static Version Version { get; }
 
-        public static LogOutput Log { get; } = new LogOutput("Plugin Manager");
+        public static LogOutput Log { get; } = new LogOutput("Plugin Manager").Setup();
 
         public static IReadOnlyList<Plugin> Plugins => plugins;
 
@@ -43,8 +44,6 @@ namespace Compendium.Plugins
             foreach (var file in Directory.GetFiles(directoryPath, "*.dll", SearchOption.AllDirectories))
                 LoadFile(file);
 
-            Log.Info($"Finished loading plugins! ({plugins.Count} plugins)");
-
             if (reflection.Count > 0)
             {
                 Log.Info($"Plugin loading finished, but there are still {reflection.Count} plugins with missing dependencies. Attempting to reload now.");
@@ -54,6 +53,10 @@ namespace Compendium.Plugins
 
                 Log.Info($"Finished loading plugins with missing dependencies.");
             }
+
+            reflection.Clear();
+            
+            Log.Info($"Finished loading plugins! ({plugins.Count} plugins)");
         }
 
         public static void LoadFile(string filePath)
@@ -97,12 +100,12 @@ namespace Compendium.Plugins
             }
             else if (!isReflection && assembly.ReflectionOnly)
             {
-                Log.Warn($"Attempted to perform a normal laod on an assembly loaded via the reflection-only context! (assembly: {assembly.FullName})");
+                Log.Warn($"Attempted to perform a normal load on an assembly loaded via the reflection-only context! (assembly: {assembly.FullName})");
                 return;
             }
             else
             {
-                var foundPlugins = ListPool<Plugin>.Shared.Next();
+                var foundPlugins = ListPool<Plugin>.Shared.Rent();
                 var assemblyName = assembly.GetName();
 
                 foreach (var type in assembly.GetTypes())
@@ -155,6 +158,7 @@ namespace Compendium.Plugins
                         if (plugins[i].Version > plugin.Version)
                         {
                             shouldContinue = false;
+
                             Log.Warn($"Attempted to load an outdated plugin version! There's already a newer version of '{plugins[i].Name}' present: {plugins[i].Version} (attempted to load '{plugin.Version})'");
                             continue;
                         }
@@ -162,6 +166,7 @@ namespace Compendium.Plugins
                         if (plugins[i].Version < plugin.Version)
                         {
                             Log.Info($"Loading a newer version of plugin '{plugin.Name}' ({plugin.Version}), unloading the current version ({plugins[i].Version}).");
+
                             Unload(plugins[i]);
                             continue;
                         }
@@ -191,6 +196,7 @@ namespace Compendium.Plugins
 
                         Log.Info($"Loaded plugin '{plugin.Name}' by '{plugin.Author}' ({plugin.Version})!");
                     },
+
                     ex =>
                     {
                         Log.Error($"Failed to invoke 'Load' method of plugin '{plugin.Name}', skipping load.\n{ex}");
@@ -213,7 +219,7 @@ namespace Compendium.Plugins
                 return;
             }
 
-            var missing = ListPool<AssemblyName>.Shared.Next();
+            var missing = ListPool<AssemblyName>.Shared.Rent();
 
             for (int i = 0; i < dependencies.Length; i++)
             {
@@ -272,12 +278,13 @@ namespace Compendium.Plugins
         {
             try
             {
-                name.VersionCompatibility = AssemblyVersionCompatibility.SameProcess;
                 name.Version = new Version(1, 0, 0, 0);
                 name.CultureInfo = CultureInfo.InvariantCulture;
+
                 name.Flags = AssemblyNameFlags.EnableJITcompileTracking | AssemblyNameFlags.EnableJITcompileOptimizer;
                 name.HashAlgorithm = AssemblyHashAlgorithm.None;
                 name.ProcessorArchitecture = ProcessorArchitecture.X86;
+                name.VersionCompatibility = AssemblyVersionCompatibility.SameProcess;
             }
             catch (Exception ex)
             {
