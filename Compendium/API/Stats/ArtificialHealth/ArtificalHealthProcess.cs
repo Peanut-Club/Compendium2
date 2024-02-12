@@ -54,5 +54,8 @@ namespace Compendium.API.Stats.ArtificialHealth
         {
             Base = ahpProcess;
         }
+
+        public virtual void OnAdded() { }
+        public virtual void OnRemoved() { }
     }
 }

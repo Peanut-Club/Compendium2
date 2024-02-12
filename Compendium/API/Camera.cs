@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Compendium.API
 {
-    public class Camera : Wrapper<Scp079Camera>, IWorldObject<Vector3, Vector2>
+    public class Camera : Wrapper<Scp079Camera>, IWorldObject<Vector2>
     {
         public static Camera Default { get; private set; }
 

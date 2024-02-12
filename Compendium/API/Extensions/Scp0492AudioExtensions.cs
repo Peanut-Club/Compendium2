@@ -1,4 +1,4 @@
-﻿using Compendium.API.Roles.Scp0492.Abilities;
+﻿using Compendium.API.Enums;
 
 using PlayerRoles.PlayableScps.Scp049.Zombies;
 

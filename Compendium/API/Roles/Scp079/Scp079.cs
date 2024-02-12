@@ -1,11 +1,10 @@
 ﻿using Common.Values;
 
 using Compendium.API.GameModules.Subroutines;
+using Compendium.API.Enums;
 
 using Compendium.API.Roles.Interfaces;
-
 using Compendium.API.Roles.Scp079.Abilities;
-using Compendium.API.Roles.Scp079.Tier;
 
 using PlayerRoles;
 using PlayerRoles.Subroutines;

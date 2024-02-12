@@ -1,4 +1,4 @@
-﻿namespace Compendium.API.Roles.Scp0492.Abilities
+﻿namespace Compendium.API.Enums
 {
     public enum Scp0492AudioType : byte
     {

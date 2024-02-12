@@ -4,9 +4,10 @@
         where T : struct
     {
         private T allowedValue;
+        private EventMethod changedByHandler;
 
-        public virtual T CancelledValue { get; }
-        public virtual T AllowedValue { get; }
+        internal virtual T CancelledValue { get; }
+        internal virtual T AllowedValue { get; }
 
         public override bool IsCancellable { get; } = true;
 
@@ -15,6 +16,8 @@
             get => allowedValue;
             set
             {
+                changedByHandler = CurrentHandler;
+
                 var current = allowedValue;
 
                 allowedValue = value;
@@ -22,6 +25,11 @@
                 if (!allowedValue.Equals(current))
                     OnAllowedChanged(current, value);
             }
+        }
+
+        public EventMethod CancellationChangedBy
+        {
+            get => changedByHandler;
         }
 
         public void Cancel()

@@ -5,10 +5,11 @@ using Common.Values;
 using Compendium.API.Modules;
 
 using Compendium.API.Roles.Abilities;
+
 using Compendium.API.Roles.Scp0492.Abilities;
+
 using Compendium.API.Roles.Scp079;
 using Compendium.API.Roles.Scp079.Abilities;
-using Compendium.API.Roles.Scp079.Tier;
 
 using PlayerRoles.PlayableScps.Scp049;
 using PlayerRoles.PlayableScps.Scp049.Zombies;
@@ -29,10 +30,7 @@ namespace Compendium.API.GameModules.Subroutines
     {
         private static readonly ModuleUpdate UpdateInfo = new ModuleUpdate("OnUpdate", 15, false, true);
 
-        public override string Name
-        {
-            get => "Subroutine Manager";
-        }
+        public override string Name { get; } = "Subroutine Manager";
 
         public SubroutineManagerModule Base { get; private set; }
         public Player Player { get; private set; }
@@ -239,16 +237,16 @@ namespace Compendium.API.GameModules.Subroutines
 
                 #region SCP-049-2
                 case ZombieAttackAbility zombieAttackAbility:
-                    return new Scp0492AttackAbility(Player, zombieAttackAbility);
+                    return new AbilityWrapper<ZombieAttackAbility>(Player, zombieAttackAbility);
+
+                case ZombieConsumeAbility zombieConsumeAbility:
+                    return new AbilityWrapper<ZombieConsumeAbility>(Player, zombieConsumeAbility);
 
                 case ZombieAudioPlayer zombieAudioPlayer:
                     return new Scp0492AudioPlayer(Player, zombieAudioPlayer);
 
                 case ZombieBloodlustAbility zombieBloodlustAbility:
                     return new Scp0492BloodlustAbility(Player, zombieBloodlustAbility);
-
-                case ZombieConsumeAbility zombieConsumeAbility:
-                    return new Scp0492ConsumeAbility(Player, zombieConsumeAbility);
 
                 case ZombieIndicatorTracker zombieIndicatorTracker:
                     return new AbilityWrapper<ZombieIndicatorTracker>(Player, zombieIndicatorTracker);

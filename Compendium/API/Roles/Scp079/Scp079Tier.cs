@@ -1,9 +1,10 @@
 ﻿using Compendium.API.Roles.Abilities;
+using Compendium.API.Enums;
 
 using PlayerRoles;
 using PlayerRoles.PlayableScps.Scp079;
 
-namespace Compendium.API.Roles.Scp079.Tier
+namespace Compendium.API.Roles.Scp079
 {
     public class Scp079Tier : AbilityWrapper<Scp079TierManager>
     {

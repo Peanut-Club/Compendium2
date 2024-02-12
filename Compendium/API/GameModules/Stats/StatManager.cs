@@ -10,7 +10,7 @@ using System;
 
 using PlayerStatsSystem;
 
-using AdminFlagsStat = Compendium.API.Stats.Admin.AdminFlagsStat;
+using AdminFlagsStat = Compendium.API.Stats.AdminFlagsStat;
 
 namespace Compendium.API.GameModules.Stats
 {

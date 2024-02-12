@@ -1,4 +1,6 @@
-﻿namespace Compendium.API.Stats.Admin
+﻿using Compendium.API.Enums;
+
+namespace Compendium.API.Stats
 {
     public class AdminFlagsStat : Stat<PlayerStatsSystem.AdminFlagsStat>
     {

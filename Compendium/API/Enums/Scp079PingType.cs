@@ -1,4 +1,4 @@
-﻿namespace Compendium.API.Roles.Scp079.Abilities
+﻿namespace Compendium.API.Enums
 {
     public enum Scp079PingType : byte
     {

@@ -1,4 +1,4 @@
-﻿namespace Compendium.API.Roles.Scp079.Tier
+﻿namespace Compendium.API.Enums
 {
     public enum Scp079TierType
     {

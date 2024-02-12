@@ -1,7 +1,9 @@
 ﻿using Compendium.API.Roles.Abilities;
+using Compendium.API.Enums;
+
 using MapGeneration;
+
 using PlayerRoles.PlayableScps.Scp079;
-using PluginAPI.Events;
 
 namespace Compendium.API.Roles.Scp079.Abilities
 {

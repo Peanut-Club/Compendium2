@@ -87,7 +87,7 @@
     <Compile Include="API\Networking\Identity.cs" />
     <Compile Include="API\Roles\Scp079\Abilities\Scp079MapAbility.cs" />
     <Compile Include="API\Roles\Scp079\Abilities\Scp079PingAbility.cs" />
-    <Compile Include="API\Roles\Scp079\Abilities\Scp079PingType.cs" />
+    <Compile Include="API\Enums\Scp079PingType.cs" />
     <Compile Include="API\Wrapper.cs" />
     <Compile Include="API\Extensions\QuaternionExtensions.cs" />
     <Compile Include="API\Extensions\ReferenceHubExtensions.cs" />
@@ -105,7 +105,6 @@
     <Compile Include="API\GameModules\Subroutines\IGameSubroutine.cs" />
     <Compile Include="API\GameModules\Subroutines\ISubroutine.cs" />
     <Compile Include="API\GameModules\Subroutines\SubroutineManager.cs" />
-    <Compile Include="API\Invisibility\InvisibilityList.cs" />
     <Compile Include="API\Modules\ModuleBase.cs" />
     <Compile Include="API\Modules\ModuleManager.cs" />
     <Compile Include="API\Modules\ModuleUpdate.cs" />
@@ -122,11 +121,9 @@
     <Compile Include="API\Roles\Other\FirstPersonRole.cs" />
     <Compile Include="API\Roles\Other\SubroutinedRole.cs" />
     <Compile Include="API\Roles\Role.cs" />
-    <Compile Include="API\Roles\Scp0492\Abilities\Scp0492AttackAbility.cs" />
     <Compile Include="API\Roles\Scp0492\Abilities\Scp0492AudioPlayer.cs" />
-    <Compile Include="API\Roles\Scp0492\Abilities\Scp0492AudioType.cs" />
+    <Compile Include="API\Enums\Scp0492AudioType.cs" />
     <Compile Include="API\Roles\Scp0492\Abilities\Scp0492BloodlustAbility.cs" />
-    <Compile Include="API\Roles\Scp0492\Abilities\Scp0492ConsumeAbility.cs" />
     <Compile Include="API\Roles\Scp0492\Scp0492.cs" />
     <Compile Include="API\Roles\Scp049\Abilities\Scp049AttackAbility.cs" />
     <Compile Include="API\Roles\Scp049\Abilities\Scp049CallAbility.cs" />
@@ -147,15 +144,15 @@
     <Compile Include="API\Roles\Scp079\Abilities\Scp079ZoneBlackoutAbility.cs" />
     <Compile Include="API\Roles\Scp079\Scp079.cs" />
     <Compile Include="API\Roles\Scp079\Scp079Aux.cs" />
-    <Compile Include="API\Roles\Scp079\Scp079Translation.cs" />
-    <Compile Include="API\Roles\Scp079\Tier\Scp079Tier.cs" />
-    <Compile Include="API\Roles\Scp079\Tier\Scp079TierType.cs" />
+    <Compile Include="API\Enums\Scp079Translation.cs" />
+    <Compile Include="API\Roles\Scp079\Scp079Tier.cs" />
+    <Compile Include="API\Enums\Scp079TierType.cs" />
     <Compile Include="API\Roles\Spawnpoints\BoundSpawnPoint.cs" />
     <Compile Include="API\Roles\Spawnpoints\ISpawnPoint.cs" />
     <Compile Include="API\Roles\Spawnpoints\RoomSpawnPoint.cs" />
     <Compile Include="API\Roles\Spawnpoints\SpawnPoint.cs" />
-    <Compile Include="API\Stats\Admin\AdminFlags.cs" />
-    <Compile Include="API\Stats\Admin\AdminFlagsStat.cs" />
+    <Compile Include="API\Enums\AdminFlags.cs" />
+    <Compile Include="API\Stats\AdminFlagsStat.cs" />
     <Compile Include="API\Stats\ArtificialHealth\ArtificalHealthProcess.cs" />
     <Compile Include="API\Stats\ArtificialHealth\ArtificalHealthStat.cs" />
     <Compile Include="API\Stats\Stat.cs" />
@@ -184,7 +181,7 @@
     <Compile Include="Events\EventRecord.cs" />
     <Compile Include="Events\EventUtils.cs" />
     <Compile Include="Events\PlayerEvents\PlayerJoinedEvent.cs" />
-    <Compile Include="Events\PlayerEvents\PlayerJoiningCancellation.cs" />
+    <Compile Include="Events\PlayerEvents\PlayerJoiningEventCancellation.cs" />
     <Compile Include="Events\PlayerEvents\PlayerJoiningEvent.cs" />
     <Compile Include="Events\PlayerEvents\PlayerLeavingEvent.cs" />
     <Compile Include="Events\PlayerEvents\PlayerLeftEvent.cs" />
@@ -196,6 +193,7 @@
     <Compile Include="Threading\UnityThread.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="API\Roles\Scp079\Tier\" />
     <Folder Include="Patches\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

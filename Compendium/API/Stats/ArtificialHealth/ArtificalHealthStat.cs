@@ -33,6 +33,8 @@ namespace Compendium.API.Stats.ArtificialHealth
 
             AddNewProcess(process.Base);
 
+            process.OnAdded();
+
             return process;
         }
 
@@ -75,13 +77,16 @@ namespace Compendium.API.Stats.ArtificialHealth
                 return;
             }
 
+            var process = new ArtificialHealthProcess(ahpProcess);
             var processes = ListPool<ArtificialHealthProcess>.Shared.Rent(Processes);
 
-            processes.Add(new ArtificialHealthProcess(ahpProcess));
+            processes.Add(process);
 
             Processes = processes.AsReadOnly();
 
             ListPool<ArtificialHealthProcess>.Shared.Return(processes);
+
+            process.OnAdded();
         }
 
         internal void RemoveProcess(AhpStat.AhpProcess ahpProcess)
@@ -93,7 +98,10 @@ namespace Compendium.API.Stats.ArtificialHealth
             var processIndex = processes.FindIndex(p => p.Code == ahpProcess.KillCode);
 
             if (processIndex != -1)
+            {
+                processes[processIndex].OnRemoved();
                 processes.RemoveAt(processIndex);
+            }
 
             Processes = processes.AsReadOnly();
 

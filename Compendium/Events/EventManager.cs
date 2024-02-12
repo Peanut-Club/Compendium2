@@ -156,7 +156,7 @@ namespace Compendium.Events
 
             if (targetEv.Listeners.Any(listener => 
                 listener.IsValid && listener.Target == handler && ((listener.Instance is null && target is null) 
-                || ((listener.Instance != null && target != null) && listener.Instance == target))))
+                || (listener.Instance != null && target != null && listener.Instance == target))))
             {
                 if (isManual)
                     Log.Warn($"Tried to register a duplicate event handler: {handler.ToName()}");
@@ -165,6 +165,7 @@ namespace Compendium.Events
             }
 
             targetEv.Listeners.Add(new EventMethod(handler, target, false));
+            targetEv.HasAnyCustom = targetEv.Listeners.Any(listener => !listener.IsEventParam);
 
             if (targetEv.HasPatch && !targetEv.IsPatched)
                 targetEv.IsPatched = true;

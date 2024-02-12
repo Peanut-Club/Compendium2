@@ -1,4 +1,4 @@
-﻿using Compendium.API.Roles.Scp079.Abilities;
+﻿using Compendium.API.Enums;
 
 using PlayerRoles.PlayableScps.Scp079.Pinging;
 

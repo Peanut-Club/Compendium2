@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Compendium.API.Stats.Admin
+namespace Compendium.API.Enums
 {
     [Flags]
     public enum AdminFlags

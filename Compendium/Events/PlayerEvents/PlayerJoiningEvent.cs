@@ -6,9 +6,12 @@ using System;
 
 namespace Compendium.Events.PlayerEvents
 {
-    public class PlayerJoiningEvent : CancellableEvent<PlayerJoiningCancellation>
+    public class PlayerJoiningEvent : CancellableEvent<PlayerJoiningEventCancellation>
     {
         public static event Action<PlayerJoiningEvent> OnEvent;
+
+        internal override PlayerJoiningEventCancellation AllowedValue => PlayerJoiningEventCancellation.Accept();
+        internal override PlayerJoiningEventCancellation CancelledValue => PlayerJoiningEventCancellation.Reject(string.Empty);
 
         public NetDataReader Reader { get; }
 
@@ -50,30 +53,30 @@ namespace Compendium.Events.PlayerEvents
         }
 
         public void Accept()
-            => IsAllowed = PlayerJoiningCancellation.Accept();
+            => IsAllowed = PlayerJoiningEventCancellation.Accept();
 
         public void Handle()
-            => IsAllowed = PlayerJoiningCancellation.Handle();
+            => IsAllowed = PlayerJoiningEventCancellation.Handle();
 
         public void Delay(byte seconds, bool forced = true)
-            => IsAllowed = PlayerJoiningCancellation.Delay(seconds, forced);
+            => IsAllowed = PlayerJoiningEventCancellation.Delay(seconds, forced);
 
         public void Redirect(ushort port, bool forced = true)
-            => IsAllowed = PlayerJoiningCancellation.Redirect(port, forced);
+            => IsAllowed = PlayerJoiningEventCancellation.Redirect(port, forced);
 
         public void Reject(string message, bool forced = true)
-            => IsAllowed = PlayerJoiningCancellation.Reject(message, forced);
+            => IsAllowed = PlayerJoiningEventCancellation.Reject(message, forced);
 
         public void Reject(NetDataWriter writer, bool forced = true)
-            => IsAllowed = PlayerJoiningCancellation.Reject(writer, forced);
+            => IsAllowed = PlayerJoiningEventCancellation.Reject(writer, forced);
 
         public void RejectBanned(string reason, DateTime expiery, bool forced = true)
-            => IsAllowed = PlayerJoiningCancellation.RejectBanned(reason, expiery, forced);
+            => IsAllowed = PlayerJoiningEventCancellation.RejectBanned(reason, expiery, forced);
 
         public void RejectBanned(string reason, long expieryTicks, bool forced = true)
-            => IsAllowed = PlayerJoiningCancellation.RejectBanned(reason, expieryTicks, forced);
+            => IsAllowed = PlayerJoiningEventCancellation.RejectBanned(reason, expieryTicks, forced);
 
-        public void RestoreReader()
+        public void ResetReader()
         {
             if (Reader != null && Reader.Position != ReaderIndex)
                 Reader.SetPosition(ReaderIndex);

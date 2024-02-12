@@ -1,6 +1,5 @@
 ﻿using Common.Extensions;
 using Common.Logging;
-using Common.Pooling.Pools;
 
 using System;
 using System.Reflection;
@@ -9,6 +8,8 @@ namespace Compendium.Events
 {
     public class EventMethod
     {
+        private object[] argsCache;
+
         public static LogOutput Log => EventManager.Log;
 
         public MethodInfo Target { get; }
@@ -44,7 +45,11 @@ namespace Compendium.Events
             IsLess = Parameters.Length == 0;
 
             if (!IsLess)
+            {
                 IsEventParam = Parameters.Length == 1 && Parameters[0].ParameterType.IsSubclassOf(typeof(Event));
+
+                argsCache = new object[Parameters.Length];
+            }
 
             Record = new EventRecord();
         }
@@ -75,19 +80,16 @@ namespace Compendium.Events
             }
             else if (IsEventParam)
             {
-                return CallWithArgs([ev], ev, out isError);
+                argsCache[0] = ev;
+                return CallWithArgs(argsCache, ev, out isError);
             }
             else
             {
-                var args = ArrayPool<object>.Shared.Rent(Parameters.Length);
+                ev.GenerateArgs(Parameters, argsCache);
 
-                ev.GenerateArgs(Parameters, args);
+                var result = CallWithArgs(argsCache, ev, out isError);
 
-                var result = CallWithArgs(args, ev, out isError);
-
-                ev.FinishArgs(args, Parameters);
-
-                ArrayPool<object>.Shared.Return(args);
+                ev.FinishArgs(argsCache, Parameters);
 
                 return result;
             }

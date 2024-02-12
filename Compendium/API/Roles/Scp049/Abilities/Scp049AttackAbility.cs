@@ -20,7 +20,7 @@ namespace Compendium.API.Roles.Scp049.Abilities
             set => Base._target = value.Base;
         }
 
-        public bool IsInstaKill
+        public bool IsInstantKill
         {
             get => Base._isInstaKillAttack;
             set => Base._isInstaKillAttack = value;
