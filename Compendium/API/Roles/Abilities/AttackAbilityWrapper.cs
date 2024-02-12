@@ -3,10 +3,10 @@ using PlayerRoles.PlayableScps.Subroutines;
 
 namespace Compendium.API.Roles.Abilities
 {
-    public class AttackAbility<TRole> : Ability<ScpAttackAbilityBase<TRole>>
+    public class AttackAbilityWrapper<TRole> : AbilityWrapper<ScpAttackAbilityBase<TRole>>
         where TRole : FpcStandardScp
     {
-        public AttackAbility(Player player, ScpAttackAbilityBase<TRole> ability) : base(player, ability)
+        public AttackAbilityWrapper(Player player, ScpAttackAbilityBase<TRole> ability) : base(player, ability)
         {
             AttackDelay = ability.AttackDelay;
             AttackCooldown = ability.BaseCooldown;

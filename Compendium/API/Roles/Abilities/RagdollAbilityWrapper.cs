@@ -3,10 +3,10 @@ using PlayerRoles.PlayableScps.Scp049;
 
 namespace Compendium.API.Roles.Abilities
 {
-    public class RagdollAbility<TRole> : Ability<RagdollAbilityBase<TRole>> 
+    public class RagdollAbilityWrapper<TRole> : AbilityWrapper<RagdollAbilityBase<TRole>> 
         where TRole : FpcStandardScp
     {
-        public RagdollAbility(Player player, RagdollAbilityBase<TRole> ability) : base(player, ability)
+        public RagdollAbilityWrapper(Player player, RagdollAbilityBase<TRole> ability) : base(player, ability)
         {
             Duration = ability.Duration;
         }

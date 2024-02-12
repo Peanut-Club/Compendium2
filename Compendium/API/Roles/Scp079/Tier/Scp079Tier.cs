@@ -5,7 +5,7 @@ using PlayerRoles.PlayableScps.Scp079;
 
 namespace Compendium.API.Roles.Scp079.Tier
 {
-    public class Scp079Tier : Ability<Scp079TierManager>
+    public class Scp079Tier : AbilityWrapper<Scp079TierManager>
     {
         public Scp079Tier(Player player, Scp079TierManager ability) : base(player, ability) { }
 

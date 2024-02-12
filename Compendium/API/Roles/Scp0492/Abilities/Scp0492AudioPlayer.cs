@@ -5,7 +5,7 @@ using PlayerRoles.PlayableScps.Scp049.Zombies;
 
 namespace Compendium.API.Roles.Scp0492.Abilities
 {
-    public class Scp0492AudioPlayer : Ability<ZombieAudioPlayer>
+    public class Scp0492AudioPlayer : AbilityWrapper<ZombieAudioPlayer>
     {
         public Scp0492AudioPlayer(Player player, ZombieAudioPlayer ability) : base(player, ability) { }
 

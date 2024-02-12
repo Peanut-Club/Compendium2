@@ -2,7 +2,7 @@
 
 namespace Compendium.API.Roles.Scp049.Abilities
 {
-    public class Scp049CallAbility : Ability<PlayerRoles.PlayableScps.Scp049.Scp049CallAbility>
+    public class Scp049CallAbility : AbilityWrapper<PlayerRoles.PlayableScps.Scp049.Scp049CallAbility>
     {
         public Scp049CallAbility(Player player, PlayerRoles.PlayableScps.Scp049.Scp049CallAbility scp049CallAbility) : base(player, scp049CallAbility)
         {

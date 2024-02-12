@@ -90,6 +90,8 @@ namespace Compendium.API
             Stats = Add<StatManager>();
             Subroutines = Add<SubroutineManager>();
 
+            UpdateRole();
+
             players.Add(this);
         }
 

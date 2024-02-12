@@ -6,7 +6,7 @@ using PlayerRoles.PlayableScps.Scp079;
 
 namespace Compendium.API.Roles.Scp079
 {
-    public class Scp079Aux : Ability<Scp079AuxManager>
+    public class Scp079Aux : AbilityWrapper<Scp079AuxManager>
     {
         internal float? customRegenSpeed;
 

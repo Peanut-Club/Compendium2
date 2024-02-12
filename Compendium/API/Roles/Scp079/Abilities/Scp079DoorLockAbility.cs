@@ -12,7 +12,7 @@ using System;
 
 namespace Compendium.API.Roles.Scp079.Abilities
 {
-    public class Scp079DoorLockAbility : Ability<Scp079DoorLockChanger>
+    public class Scp079DoorLockAbility : AbilityWrapper<Scp079DoorLockChanger>
     {
         public Scp079DoorLockAbility(Player player, Scp079DoorLockChanger ability) : base(player, ability) { }
 

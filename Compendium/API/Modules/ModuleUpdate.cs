@@ -34,7 +34,7 @@ namespace Compendium.API.Modules
             IntervalMax = maxInterval;
             IntervalMin = minInterval;
 
-            if (IntervalMin > IntervalMax || IntervalMax == IntervalMin)
+            if (IntervalMin > IntervalMax || IntervalMax == IntervalMin || IntervalMax < 0 || IntervalMin < 0)
                 throw new ArgumentOutOfRangeException(nameof(maxInterval));
 
             IsActiveDuringRestart = isActiveDuringRestart;

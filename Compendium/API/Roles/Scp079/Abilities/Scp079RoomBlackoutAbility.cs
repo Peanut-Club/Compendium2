@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Compendium.API.Roles.Scp079.Abilities
 {
-    public class Scp079RoomBlackoutAbility : Ability<Scp079BlackoutRoomAbility>
+    public class Scp079RoomBlackoutAbility : AbilityWrapper<Scp079BlackoutRoomAbility>
     {
         public Scp079RoomBlackoutAbility(Player player, Scp079BlackoutRoomAbility ability) : base(player, ability) { }
 

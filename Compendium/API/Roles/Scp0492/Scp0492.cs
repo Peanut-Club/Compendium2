@@ -1,11 +1,13 @@
-﻿using Compendium.API.Roles.Other;
+﻿using Common.Values;
+
+using Compendium.API.Roles.Other;
 using Compendium.API.Roles.Scp0492.Abilities;
 
 using PlayerRoles.PlayableScps.Scp049.Zombies;
 
 namespace Compendium.API.Roles.Scp0492
 {
-    public class Scp0492 : SubroutinedRole
+    public class Scp0492 : SubroutinedRole, IWrapper<ZombieRole>
     {
         public Scp0492(ZombieRole zombieRole) : base(zombieRole)
         {

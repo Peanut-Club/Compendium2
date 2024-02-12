@@ -4,7 +4,7 @@ using Compendium.API.Roles.Abilities;
 
 namespace Compendium.API.Roles.Scp049.Abilities
 {
-    public class Scp049ResurrectAbility : Ability<PlayerRoles.PlayableScps.Scp049.Scp049ResurrectAbility>
+    public class Scp049ResurrectAbility : AbilityWrapper<PlayerRoles.PlayableScps.Scp049.Scp049ResurrectAbility>
     {
         public Scp049ResurrectAbility(Player player, PlayerRoles.PlayableScps.Scp049.Scp049ResurrectAbility scp049ResurrectAbility) : base(player, scp049ResurrectAbility) { }
 

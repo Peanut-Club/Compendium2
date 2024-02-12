@@ -1,52 +1,40 @@
-﻿using PlayerRoles.PlayableScps.Scp079.Cameras;
-
-using CentralAuth;
+﻿using Mirror;
 
 using PlayerRoles;
+using PlayerRoles.PlayableScps.Scp079.Cameras;
 
-using Mirror;
+using UnityEngine;
 
-using MEC;
+using Utils.NonAllocLINQ;
 
 namespace Compendium.API.Utilities
 {
     public static class CameraUtils
     {
-        public static void ServerSetRotation(this Scp079Camera cam, float rotation)
+        public static bool TrySetRotation(this Scp079Camera cam, Vector2 rotation)
         {
-            cam.HorizontalAxis.TargetValue = rotation;
-            cam.ServerSyncCamera();
+            cam.VerticalAxis.TargetValue = rotation.x;
+            cam.HorizontalAxis.TargetValue = rotation.y;
+
+            return cam.TrySyncCamera();
         }
 
-        public static void ServerSyncCamera(this Scp079Camera camera)
+        public static bool TrySyncCamera(this Scp079Camera camera)
         {
-            foreach (var hub in ReferenceHub.AllHubs)
-            {
-                if (hub.Mode != ClientInstanceMode.ReadyClient)
-                    continue;
+            var compHub = ReferenceHub.AllHubs.FirstOrDefault(hub => hub.roleManager.CurrentRole.RoleTypeId is RoleTypeId.Scp079, null);
 
-                hub.ServerSendSync<Scp079CameraRotationSync>(ReferenceHub.HostHub, RoleTypeId.Scp079, writer =>
-                {
-                    writer.WriteUShort(camera.SyncId);
-                    camera.WriteAxes(writer);
-                });
-            }
-        }
+            if (compHub is null)
+                return false;
 
-        internal static void InitRound()
-        {
-            ReferenceHub.HostHub.roleManager.ServerSetRole(RoleTypeId.Scp079, RoleChangeReason.RemoteAdmin, RoleSpawnFlags.None);
+            var writer = NetworkWriterPool.Get();
 
-            Timing.CallDelayed(0.3f, () =>
-            {
-                foreach (var hub in ReferenceHub.AllHubs)
-                {
-                    if (hub.Mode != ClientInstanceMode.ReadyClient || hub.IsAlive())
-                        continue;
+            writer.WriteUShort(camera.SyncId);
 
-                    hub.connectionToClient.Send(new RoleSyncInfo(ReferenceHub.HostHub, RoleTypeId.None, hub));
-                }
-            });
+            camera.WriteAxes(writer);
+
+            SubroutineUtils.ServerSendSync<Scp079CameraRotationSync>(compHub, compHub, writer, RoleTypeId.Scp079);
+
+            return true;
         }
     }
 }

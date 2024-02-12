@@ -3,7 +3,7 @@ using Compendium.API.Roles.Abilities;
 
 namespace Compendium.API.Roles.Scp049.Abilities
 {
-    public class Scp049SenseAbility : Ability<PlayerRoles.PlayableScps.Scp049.Scp049SenseAbility>
+    public class Scp049SenseAbility : AbilityWrapper<PlayerRoles.PlayableScps.Scp049.Scp049SenseAbility>
     {
         public Scp049SenseAbility(Player player, PlayerRoles.PlayableScps.Scp049.Scp049SenseAbility scp049SenseAbility) : base(player, scp049SenseAbility)
         {

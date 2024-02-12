@@ -5,7 +5,7 @@ using PluginAPI.Events;
 
 namespace Compendium.API.Roles.Scp079.Abilities
 {
-    public class Scp079ZoneBlackoutAbility : Ability<Scp079BlackoutZoneAbility>
+    public class Scp079ZoneBlackoutAbility : AbilityWrapper<Scp079BlackoutZoneAbility>
     {
         public Scp079ZoneBlackoutAbility(Player player, Scp079BlackoutZoneAbility ability) : base(player, ability) { }
 

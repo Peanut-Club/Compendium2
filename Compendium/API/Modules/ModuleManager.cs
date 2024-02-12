@@ -1,5 +1,5 @@
-﻿using Common.Extensions;
-using Common.IO.Collections;
+﻿using Common.IO.Collections;
+using Common.Extensions;
 using Common.Utilities;
 using Common.Logging;
 
@@ -13,13 +13,19 @@ namespace Compendium.API.Modules
         private object modulesLock;
 
         public bool IsValid { get; private set; }
+        
+        public LogOutput Log { get; private set; }
 
         public ModuleManager()
         {
             modules = new LockedDictionary<Type, ModuleBase>();
             modulesLock = new object();
 
-            CodeUtils.WhileTrue(() => IsValid, UpdateModules, 5);
+            Log = new LogOutput("Module Manager").Setup();
+
+            IsValid = true;
+
+            CodeUtils.WhileTrue(() => IsValid, UpdateModules, 15);
         }
 
         public T Add<T>() where T : ModuleBase
@@ -30,20 +36,28 @@ namespace Compendium.API.Modules
                     && module.IsActive)
                     return (T)module;
 
-                module = typeof(T).Construct<T>();
-
-                module.Manager = this;
-                module.Log = new LogOutput(typeof(T).Name.SpaceByUpperCase()).Setup();
-
-                var moduleUpdate = module.OnStart();
-
-                if (moduleUpdate != null && moduleUpdate.UpdateMethod != null)
+                try
                 {
-                    module.IsUpdateActive = true;
-                    module.Update = moduleUpdate;
-                }
+                    module = typeof(T).Construct<T>();
 
-                return (T)module;
+                    module.Manager = this;
+                    module.Log = new LogOutput(typeof(T).Name.SpaceByUpperCase()).Setup();
+
+                    var moduleUpdate = module.OnStart();
+
+                    if (moduleUpdate != null && moduleUpdate.UpdateMethod != null)
+                    {
+                        module.IsUpdateActive = true;
+                        module.Update = moduleUpdate;
+                    }
+
+                    return (T)module;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"An error occured while adding module '{typeof(T).FullName}':\n{ex}");
+                    return default;
+                }
             }
         }
 
@@ -52,10 +66,10 @@ namespace Compendium.API.Modules
             lock (modulesLock)
             {
                 if (modules.TryGetValue(typeof(T), out var module)
-                    && module.IsActive)
+                    && module.IsValid())
                     return (T)module;
 
-                return null;
+                return default;
             }
         }
 
@@ -63,36 +77,56 @@ namespace Compendium.API.Modules
         {
             lock (modulesLock)
             {
-                if (modules.TryGetValue(typeof(T), out var module))
+                try
                 {
-                    module.IsActive = false;
-                    module.IsUpdateActive = false;
-                    module.Update = null;
+                    if (modules.TryGetValue(typeof(T), out var module))
+                    {
+                        module.IsActive = false;
+                        module.IsUpdateActive = false;
 
-                    module.OnStop();
+                        module.Update = null;
 
-                    module.Log?.Dispose();
-                    module.Log = null;
+                        module.OnStop();
+
+                        module.Log?.Dispose();
+                        module.Log = null;
+                    }
+
+                    return modules.Remove(typeof(T));
                 }
-
-                return modules.Remove(typeof(T));
+                catch (Exception ex)
+                {
+                    Log.Error($"An error has occured while destroying module '{typeof(T).FullName}':\n{ex}");
+                    return false;
+                }
             }
         }
 
         public void Destroy()
         {
+            if (!IsValid)
+                throw new InvalidOperationException($"This module manager has already been destroyed!");
+
             lock (modulesLock)
             {
-                foreach (var module in modules)
+                foreach (var module in modules.Values)
                 {
-                    module.Value.IsActive = false;
-                    module.Value.IsUpdateActive = false;
-                    module.Value.Update = null;
+                    try
+                    {
+                        module.IsActive = false;
+                        module.IsUpdateActive = false;
 
-                    module.Value.OnStop();
+                        module.Update = null;
 
-                    module.Value.Log?.Dispose();
-                    module.Value.Log = null;
+                        module.OnStop();
+
+                        module.Log?.Dispose();
+                        module.Log = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"An error has occured while destroying module '{module.Name}':\n{ex}");
+                    }
                 }
 
                 modules.Clear();
@@ -110,13 +144,19 @@ namespace Compendium.API.Modules
             {
                 foreach (var module in modules)
                 {
-                    if (module.Value != null && module.Value.IsActive && module.Value.IsUpdateActive && module.Value.Update != null)
+                    if (module.Value != null && module.Value.IsValid() && module.Value.IsUpdateActive)
                     {
-                        if (DateTime.Now > module.Value.Update.NextCallTime)
+                        if (DateTime.Now >= module.Value.Update.NextCallTime)
                         {
-                            module.Value.Update.UpdateMethod.Call(module.Value);
+                            module.Value.Update.UpdateMethod.Call(module.Value, Log.Error);
                             module.Value.Update.LastCallTime = DateTime.Now;
-                            module.Value.Update.NextCallTime = module.Value.Update.LastCallTime.AddMilliseconds(module.Value.Update.Interval());
+
+                            var nextInterval = module.Value.Update.Interval.Call(Log.Error);
+
+                            if (nextInterval > 0)
+                                module.Value.Update.NextCallTime = DateTime.Now.AddMilliseconds(nextInterval);
+                            else
+                                module.Value.Update.NextCallTime = DateTime.MaxValue;
                         }
                     }
                 }

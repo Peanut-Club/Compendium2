@@ -6,10 +6,10 @@ using PlayerRoles.Subroutines;
 
 namespace Compendium.API.Roles.Abilities
 {
-    public class Ability<TAbility> : IWrapper<TAbility>, ISubroutine
+    public class AbilityWrapper<TAbility> : IWrapper<TAbility>, ISubroutine
         where TAbility : SubroutineBase
     {
-        public Ability(Player player, TAbility ability)
+        public AbilityWrapper(Player player, TAbility ability)
         {
             Player = player;
             Base = ability;

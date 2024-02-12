@@ -2,7 +2,7 @@
 
 namespace Compendium.API.Roles.Scp049.Abilities
 {
-    public class Scp049AttackAbility : Ability<PlayerRoles.PlayableScps.Scp049.Scp049AttackAbility>
+    public class Scp049AttackAbility : AbilityWrapper<PlayerRoles.PlayableScps.Scp049.Scp049AttackAbility>
     {
         public const float DefaultCardiacArrestDuration = 20f;
 

@@ -4,7 +4,7 @@ using PlayerRoles.PlayableScps.Scp049.Zombies;
 
 namespace Compendium.API.Roles.Scp0492.Abilities
 {
-    public class Scp0492ConsumeAbility : RagdollAbility<ZombieRole>
+    public class Scp0492ConsumeAbility : RagdollAbilityWrapper<ZombieRole>
     {
         public Scp0492ConsumeAbility(Player player, ZombieConsumeAbility ability) : base(player, ability)
         {

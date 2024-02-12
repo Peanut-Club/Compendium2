@@ -14,7 +14,11 @@ namespace Compendium.API.Modules
 
         public LogOutput Log { get; internal set; }
 
-        public virtual ModuleUpdate OnStart() { return null; }
+        public virtual ModuleUpdate OnStart()
+            => null;
+
+        public virtual bool IsValid()
+            => IsActive;
 
         public virtual void OnStop() { }
     }
