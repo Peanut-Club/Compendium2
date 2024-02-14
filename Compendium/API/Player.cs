@@ -2,9 +2,9 @@
 using Common.Utilities;
 using Common.Extensions;
 
-using Compendium.API.UserId;
 using Compendium.API.Utilities;
 using Compendium.API.Modules;
+using Compendium.API.Enums;
 
 using Compendium.API.Roles;
 using Compendium.API.Roles.Interfaces;
@@ -37,7 +37,9 @@ using LiteNetLib;
 using Mirror.LiteNetLib4Mirror;
 
 using CustomPlayerEffects;
+
 using CentralAuth;
+using Compendium.API.Networking;
 
 namespace Compendium.API
 {
@@ -76,6 +78,7 @@ namespace Compendium.API
 
             Base = hub;
             GameObject = hub.gameObject;
+            Identity = Identity.Get(hub.networkIdentity);
 
             UserId = new UserIdValue(Base.authManager.UserId);
 
@@ -95,9 +98,10 @@ namespace Compendium.API
             players.Add(this);
         }
 
-        public ReferenceHub Base { get; }
-        public UserIdValue UserId { get; }
         public GameObject GameObject { get; }
+        public UserIdValue UserId { get; }
+        public Identity Identity { get; }
+        public ReferenceHub Base { get; }
         public NetPeer Peer { get; }
 
         public Tokens.AuthToken AuthToken { get; }
@@ -121,11 +125,6 @@ namespace Compendium.API
         public IPEndPoint IpAddress
         {
             get => Peer.EndPoint;
-        }
-
-        public NetworkIdentity Identity
-        {
-            get => Base.netIdentity;
         }
 
         public NetworkConnectionToClient Connection
@@ -165,7 +164,6 @@ namespace Compendium.API
                 if (value != null)
                 {
                     DisarmedPlayers.Entries.Add(new DisarmedPlayers.DisarmedEntry(NetworkId, value.NetworkId));
-
                     new DisarmedPlayersListMessage(DisarmedPlayers.Entries).SendToAuthenticated();
                 }
             }
@@ -243,7 +241,7 @@ namespace Compendium.API
 
         public uint NetworkId
         {
-            get => Identity.netId;
+            get => Identity.Id;
         }
 
         public float InfoViewRange
@@ -299,9 +297,7 @@ namespace Compendium.API
                 if (string.IsNullOrWhiteSpace(value))
                 {
                     RemoveInfoArea(PlayerInfoArea.CustomInfo);
-
                     Base.nicknameSync.Network_customPlayerInfoString = string.Empty;
-
                     return;
                 }
 
@@ -309,7 +305,6 @@ namespace Compendium.API
                     return;
 
                 AddInfoArea(PlayerInfoArea.CustomInfo);
-
                 Base.nicknameSync.Network_customPlayerInfoString = value;
             }
         }
@@ -420,6 +415,21 @@ namespace Compendium.API
             get => WhiteList.IsWhitelisted(UserId.Value);
             set => CodeUtils.InlinedElse(value, value == HasWhitelist, () => Whitelist.Add(UserId.Value), () => Whitelist.Remove(UserId.Value), WhiteList.Reload, WhiteList.Reload);
         }
+
+        public void Kill(string reason)
+            => Damage(-1f, reason);
+
+        public void Kill(DamageType type = DamageType.Unknown)
+            => Damage(-1f, type);
+
+        public void Damage(float damage, string message)
+            => Damage(DamageHandler.Get(DamageType.Custom, damage, null, message));
+
+        public void Damage(float damage, DamageType type = DamageType.Unknown)
+            => Damage(DamageHandler.Get(type, damage));
+
+        public void Damage(DamageHandler handler)
+            => handler?.Apply(this);
 
         public bool HasInfoArea(PlayerInfoArea infoArea)
             => (InfoArea & infoArea) != 0;

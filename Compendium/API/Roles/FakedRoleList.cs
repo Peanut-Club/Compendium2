@@ -1,10 +1,10 @@
 ﻿using Common.Values;
 
-using Compendium.API.Faking;
+using Compendium.API.Core;
 
 using PlayerRoles;
 
-namespace Compendium.API.Roles.Faking
+namespace Compendium.API.Roles
 {
     public class FakedRoleList : FakedList<RoleTypeId>
     {

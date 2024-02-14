@@ -4,7 +4,7 @@ using Common.Values;
 using System;
 using System.Collections.Generic;
 
-namespace Compendium.API.Faking
+namespace Compendium.API.Core
 {
     public class FakedList<TValue> 
     {

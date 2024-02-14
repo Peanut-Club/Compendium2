@@ -1,10 +1,15 @@
-﻿using Compendium.API.Enums;
+﻿using Compendium.API.Core;
+using Compendium.API.Enums;
 using Compendium.API.Interfaces;
 using Compendium.API.Roles.Scp079;
 using Compendium.API.Utilities;
 
+using MapGeneration;
+
+using PlayerRoles.PlayableScps.Scp079;
 using PlayerRoles.PlayableScps.Scp079.Cameras;
 
+using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
@@ -13,6 +18,9 @@ namespace Compendium.API
 {
     public class Camera : Wrapper<Scp079Camera>, IWorldObject<Vector2>
     {
+        private static readonly Dictionary<Scp079Camera, Camera> cameras = new Dictionary<Scp079Camera, Camera>();
+        private static readonly Dictionary<ushort, Camera> camerasById = new Dictionary<ushort, Camera>();
+
         public static Camera Default { get; private set; }
 
         public static ushort DefaultId
@@ -53,12 +61,40 @@ namespace Compendium.API
 
         public static Camera Get(Scp079Camera scp079Camera)
         {
+            if (cameras.TryGetValue(scp079Camera, out var camera))
+                return camera;
 
+            return null;
         }
 
         public static Camera Get(ushort camId)
         {
+            if (camerasById.TryGetValue(camId, out var camera))
+                return camera;
 
+            return null;
+        }
+
+        internal static void PrepCameras()
+        {
+            cameras.Clear();
+            camerasById.Clear();
+
+            Default = null;
+
+            foreach (var interactable in Scp079InteractableBase.AllInstances)
+            {
+                if (interactable is not Scp079Camera camera)
+                    continue;
+
+                var apiCam = new Camera(camera);
+
+                cameras[camera] = apiCam;
+                camerasById[camera.SyncId] = apiCam;
+
+                if (apiCam.Base.Room != null && apiCam.Base.Room.Name is RoomName.Hcz079 && Default is null)
+                    Default = apiCam;
+            }
         }
     }
 }

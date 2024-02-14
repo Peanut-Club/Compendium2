@@ -1,6 +1,10 @@
 ﻿using Common.Utilities;
 
+using Compendium.API.Core;
+
 using Mirror;
+
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -8,6 +12,8 @@ namespace Compendium.API.Networking
 {
     public class Identity : Wrapper<NetworkIdentity>
     {
+        private static readonly Dictionary<uint, Identity> identities = new Dictionary<uint, Identity>();
+
         public Identity(NetworkIdentity baseValue) : base(baseValue) { }
 
         public uint Asset
@@ -165,5 +171,30 @@ namespace Compendium.API.Networking
             Base.ClearAllComponentsDirtyBits();
             Base.ClearObservers();
         }
+
+        public static Identity Get(NetworkIdentity identity)
+        {
+            if (identities.TryGetValue(identity.netId, out var apiIdentity))
+                return apiIdentity;
+
+            return null;
+        }
+
+        public static Identity Get(uint netId)
+        {
+            if (identities.TryGetValue(netId, out var identity))
+                return identity;
+
+            return null;
+        }
+
+        internal static void RemoveIdentity(uint netId)
+            => identities.Remove(netId);
+
+        internal static void AddIdentity(NetworkIdentity identity)
+            => identities[identity.netId] = new Identity(identity);
+
+        internal static void ClearIdentities()
+            => identities.Clear();
     }
 }

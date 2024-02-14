@@ -11,7 +11,7 @@ namespace Compendium.API.Roles.Scp0492.Abilities
     {
         public Scp0492AudioPlayer(Player player, ZombieAudioPlayer ability) : base(player, ability) { }
 
-        public Scp0492AudioType SoundToSend
+        public Scp0492AudioType SyncedAudio
         {
             get => Base._soundToSend.ToZombieAudioType();
             set => Base._soundToSend = value.ToZombieAudioByte();
@@ -19,7 +19,7 @@ namespace Compendium.API.Roles.Scp0492.Abilities
 
         public void Play(Scp0492AudioType audioType)
         {
-            SoundToSend = audioType;
+            SyncedAudio = audioType;
             Base.ServerSendRpc(true);
         }
 

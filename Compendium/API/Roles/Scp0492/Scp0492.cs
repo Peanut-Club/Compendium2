@@ -1,5 +1,6 @@
 ﻿using Common.Values;
 
+using Compendium.API.Enums;
 using Compendium.API.Roles.Abilities;
 using Compendium.API.Roles.Other;
 using Compendium.API.Roles.Scp0492.Abilities;
@@ -28,5 +29,31 @@ namespace Compendium.API.Roles.Scp0492
 
         public Scp0492BloodlustAbility BloodlustAbility { get; }
         public Scp0492AudioPlayer AudioPlayer { get; }
+
+        public Scp0492AudioType SyncedAudio
+        {
+            get => AudioPlayer.SyncedAudio;
+            set => AudioPlayer.SyncedAudio = value;
+        }
+
+        public bool IsLookingAtBloodlustTarget
+        {
+            get => BloodlustAbility.IsLookingAtTarget;
+            set => BloodlustAbility.IsLookingAtTarget = value;
+        }
+
+        public bool HasAnyBloodlustTargets
+        {
+            get => BloodlustAbility.HasAnyTargets;
+        }
+
+        public void PlayGrowl()
+            => AudioPlayer.Growl();
+
+        public void PlayAngryGrowl()
+            => AudioPlayer.AngryGrowl();
+
+        public void PlayAudio(Scp0492AudioType audioType)
+            => AudioPlayer.Play(audioType);
     }
 }

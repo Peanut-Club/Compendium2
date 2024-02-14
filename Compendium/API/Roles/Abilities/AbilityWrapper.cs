@@ -1,23 +1,17 @@
-﻿using Common.Values;
-
+﻿using Compendium.API.Core;
 using Compendium.API.GameModules.Subroutines;
 
 using PlayerRoles.Subroutines;
 
 namespace Compendium.API.Roles.Abilities
 {
-    public class AbilityWrapper<TAbility> : IWrapper<TAbility>, ISubroutine
+    public class AbilityWrapper<TAbility> : PlayerWrapper<TAbility>, ISubroutine
         where TAbility : SubroutineBase
     {
-        public AbilityWrapper(Player player, TAbility ability)
+        public AbilityWrapper(Player player, TAbility ability) : base(player, ability)
         {
-            Player = player;
-            Base = ability;
             IsEnabled = true;
         }
-
-        public Player Player { get; }
-        public TAbility Base { get; }
 
         public bool IsEnabled { get; set; }
     }

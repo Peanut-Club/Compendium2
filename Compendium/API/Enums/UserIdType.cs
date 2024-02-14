@@ -1,4 +1,4 @@
-﻿namespace Compendium.API.UserId
+﻿namespace Compendium.API.Enums
 {
     public enum UserIdType
     {

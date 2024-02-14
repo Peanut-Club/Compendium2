@@ -24,5 +24,26 @@ namespace Compendium.API.Roles.Scp049
         public Abilities.Scp049AttackAbility AttackAbility { get; }
         public Abilities.Scp049SenseAbility SenseAbility { get; }
         public Abilities.Scp049CallAbility CallAbility { get; }
+
+        public Player AttackTarget
+        {
+            get => AttackAbility.Target;
+            set => AttackAbility.Target = value;
+        }
+
+        public Player SenseTarget
+        {
+            get => SenseAbility.Target;
+            set => SenseAbility.Target = value;
+        }
+
+        public bool IsAttackInstantKill
+        {
+            get => AttackAbility.IsInstantKill;
+            set => AttackAbility.IsInstantKill = value;
+        }
+
+        public void LoseSenseTarget()
+            => SenseAbility.LoseTarget();
     }
 }

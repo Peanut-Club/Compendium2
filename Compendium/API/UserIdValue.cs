@@ -6,7 +6,9 @@ using Common.Values;
 using System;
 using System.Linq;
 
-namespace Compendium.API.UserId
+using Compendium.API.Enums;
+
+namespace Compendium.API
 {
     public class UserIdValue : IGetValue<string>
     {

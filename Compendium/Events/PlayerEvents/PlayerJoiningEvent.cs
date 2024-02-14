@@ -6,32 +6,41 @@ using System;
 
 namespace Compendium.Events.PlayerEvents
 {
+    [EventDelegates(typeof(PlayerDelegates))]
     public class PlayerJoiningEvent : CancellableEvent<PlayerJoiningEventCancellation>
     {
-        public static event Action<PlayerJoiningEvent> OnEvent;
-
         internal override PlayerJoiningEventCancellation AllowedValue => PlayerJoiningEventCancellation.Accept();
         internal override PlayerJoiningEventCancellation CancelledValue => PlayerJoiningEventCancellation.Reject(string.Empty);
 
+        [EventProperty]
         public NetDataReader Reader { get; }
 
+        [EventProperty]
         public DateTime Expiery { get; }
 
+        [EventProperty]
         public string Ip { get; }
+
+        [EventProperty]
         public string Id { get; }
 
+        [EventProperty]
         public string Region { get; }
 
+        [EventProperty]
         public byte[] Signature { get; }
 
+        [EventProperty]
         public int ReaderIndex { get; }
 
+        [EventProperty]
         public bool IsAccepted
         {
             get => IsAllowed.Accepted;
             set => CodeUtils.InlinedElse(value, value == IsAccepted, Accept, () => Reject(string.Empty), null, null);
         }
 
+        [EventProperty]
         public bool IsRejected
         {
             get => !IsAccepted;

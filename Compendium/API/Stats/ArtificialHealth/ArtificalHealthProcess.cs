@@ -1,10 +1,10 @@
-﻿using Common.Values;
+﻿using Compendium.API.Core;
 
 using PlayerStatsSystem;
 
 namespace Compendium.API.Stats.ArtificialHealth
 {
-    public class ArtificialHealthProcess : IWrapper<AhpStat.AhpProcess>
+    public class ArtificialHealthProcess : Wrapper<AhpStat.AhpProcess>
     {
         public float Amount
         {
@@ -43,19 +43,14 @@ namespace Compendium.API.Stats.ArtificialHealth
             get => Base.Persistant;
         }
 
-        public AhpStat.AhpProcess Base { get; }
-
         public ArtificialHealthProcess(float amount, float limit, float decay, float efficacy, float sustain, bool isPersistent)
-        {
-            Base = new AhpStat.AhpProcess(amount, limit, decay, efficacy, sustain, isPersistent);
-        }
+            : base(new AhpStat.AhpProcess(amount, limit, decay, efficacy, sustain, isPersistent)) { }
 
-        public ArtificialHealthProcess(AhpStat.AhpProcess ahpProcess)
-        {
-            Base = ahpProcess;
-        }
+        public ArtificialHealthProcess(AhpStat.AhpProcess ahpProcess) 
+            : base(ahpProcess) { }
 
         public virtual void OnAdded() { }
         public virtual void OnRemoved() { }
+        public virtual void OnProgressed() { }
     }
 }

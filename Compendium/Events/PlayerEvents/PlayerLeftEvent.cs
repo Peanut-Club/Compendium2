@@ -1,15 +1,14 @@
 ﻿using Compendium.API;
 
-using System;
-
 namespace Compendium.Events.PlayerEvents
 {
+    [EventDelegates(typeof(PlayerDelegates))]
     public class PlayerLeftEvent : Event
     {
-        public static event Action<PlayerLeftEvent> OnEvent;
-
+        [EventProperty]
         public Player Player { get; }
 
+        [EventProperty]
         public bool IsTimeout { get; }
 
         public PlayerLeftEvent(Player player, bool isTimeout)

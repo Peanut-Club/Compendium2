@@ -1,10 +1,12 @@
 ﻿using Common.Values;
 
-using Compendium.API.Roles.Faking;
-
 using PlayerRoles;
 using PlayerRoles.PlayableScps.Scp049;
-
+using PlayerRoles.PlayableScps.Scp049.Zombies;
+using PlayerRoles.PlayableScps.Scp079;
+using PlayerRoles.PlayableScps.Scp096;
+using PlayerRoles.PlayableScps.Scp106;
+using PlayerRoles.PlayableScps.Scp173;
 using System;
 
 using UnityEngine;
@@ -27,13 +29,11 @@ namespace Compendium.API.Roles
         }
 
         public PlayerRoleBase Base { get; }
-
         public FakedRoleList FakedRole { get; }
 
         public Player Player
         {
             get => roleOwner;
-            set => Base._lastOwner = (roleOwner = FakedRole.Target = value).Base;
         }
 
         public string Name
@@ -121,6 +121,26 @@ namespace Compendium.API.Roles
             {
                 case Scp049Role scp049Role:
                     role = new Scp049.Scp049(scp049Role);
+                    break;
+
+                case ZombieRole zombieRole:
+                    role = new Scp0492.Scp0492(zombieRole);
+                    break;
+
+                case Scp079Role scp079Role:
+                    role = new Scp079.Scp079(scp079Role);
+                    break;
+
+                case Scp096Role scp096Role:
+                    role = new Scp096.Scp096(scp096Role);
+                    break;
+
+                case Scp106Role scp106Role:
+                    role = new Scp106.Scp106(scp106Role);
+                    break;
+
+                case Scp173Role scp173Role:
+                    role = new Scp173.Scp173(scp173Role);
                     break;
             }
 

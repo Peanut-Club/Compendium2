@@ -11,11 +11,18 @@ using Compendium.API.Roles.Scp0492.Abilities;
 using Compendium.API.Roles.Scp079;
 using Compendium.API.Roles.Scp079.Abilities;
 
+using Compendium.API.Roles.Scp096.Abilities;
+using Compendium.API.Roles.Scp106;
+using Compendium.API.Roles.Scp106.Abilities;
+using Compendium.API.Roles.Scp173;
+using Compendium.API.Roles.Scp173.Abilities;
 using PlayerRoles.PlayableScps.Scp049;
 using PlayerRoles.PlayableScps.Scp049.Zombies;
+
 using PlayerRoles.PlayableScps.Scp079;
 using PlayerRoles.PlayableScps.Scp079.Cameras;
 using PlayerRoles.PlayableScps.Scp079.Map;
+
 using PlayerRoles.Subroutines;
 
 using System;
@@ -120,7 +127,8 @@ namespace Compendium.API.GameModules.Subroutines
             {
                 for (int i = 0; i < Subroutines.Count; i++)
                 {
-                    if (Subroutines[i] is ICustomSubroutine customSubroutine)
+                    if (Subroutines[i] is ICustomSubroutine customSubroutine
+                        && customSubroutine.Player != null)
                     {
                         try
                         {
@@ -315,6 +323,66 @@ namespace Compendium.API.GameModules.Subroutines
 
                 case Scp079MapToggler scp079MapToggler:
                     return new Scp079MapAbility(Player, scp079MapToggler);
+                #endregion
+
+                #region SCP-096
+                case PlayerRoles.PlayableScps.Scp096.Scp096AttackAbility scp096AttackAbility:
+                    return new Scp096AttackAbility(Player, scp096AttackAbility);
+
+                case PlayerRoles.PlayableScps.Scp096.Scp096AudioPlayer scp096AudioPlayer:
+                    return new Scp096AudioPlayer(Player, scp096AudioPlayer);
+
+                case PlayerRoles.PlayableScps.Scp096.Scp096ChargeAbility scp096ChargeAbility:
+                    return new Scp096ChargeAbility(Player, scp096ChargeAbility);
+
+                case PlayerRoles.PlayableScps.Scp096.Scp096PrygateAbility scp096PryGateAbility:
+                    return new Scp096PryGateAbility(Player, scp096PryGateAbility);
+
+                case PlayerRoles.PlayableScps.Scp096.Scp096TryNotToCryAbility scp096TryNotToCryAbility:
+                    return new Scp096TryNotToCryAbility(Player, scp096TryNotToCryAbility);
+
+                case PlayerRoles.PlayableScps.Scp096.Scp096RageCycleAbility scpa096RageCycleAbility:
+                    return new AbilityWrapper<PlayerRoles.PlayableScps.Scp096.Scp096RageCycleAbility>(Player, scpa096RageCycleAbility);
+
+                case PlayerRoles.PlayableScps.Scp096.Scp096RageManager scp096RageManager:
+                    return new AbilityWrapper<PlayerRoles.PlayableScps.Scp096.Scp096RageManager>(Player, scp096RageManager);
+
+                case PlayerRoles.PlayableScps.Scp096.Scp096TargetsTracker scp096TargetsTracker:
+                    return new AbilityWrapper<PlayerRoles.PlayableScps.Scp096.Scp096TargetsTracker>(Player, scp096TargetsTracker);
+                #endregion
+
+                #region SCP-106
+                case PlayerRoles.PlayableScps.Scp106.Scp106Attack scp106Attack:
+                    return new Scp106AttackAbility(Player, scp106Attack);
+
+                case PlayerRoles.PlayableScps.Scp106.Scp106HuntersAtlasAbility scp106HuntersAtlasAbility:
+                    return new Scp106HuntersAtlasAbility(Player, scp106HuntersAtlasAbility);
+
+                case PlayerRoles.PlayableScps.Scp106.Scp106StalkAbility scp106StalkAbility:
+                    return new Scp106StalkAbility(Player, scp106StalkAbility);
+
+                case PlayerRoles.PlayableScps.Scp106.Scp106SinkholeController scp106SinkholeController:
+                    return new Scp106Sinkhole(Player, scp106SinkholeController);
+                #endregion
+
+                #region SCP-173
+                case PlayerRoles.PlayableScps.Scp173.Scp173AudioPlayer scp173AudioPlayer:
+                    return new Scp173AudioPlayer(Player, scp173AudioPlayer);
+
+                case PlayerRoles.PlayableScps.Scp173.Scp173BreakneckSpeedsAbility scp173BreakneckSpeedsAbility:
+                    return new Scp173BreakneckSpeedsAbility(Player, scp173BreakneckSpeedsAbility);
+
+                case PlayerRoles.PlayableScps.Scp173.Scp173SnapAbility scp173SnapAbility:
+                    return new Scp173SnapAbility(Player, scp173SnapAbility);
+
+                case PlayerRoles.PlayableScps.Scp173.Scp173TantrumAbility scp173TantrumAbility:
+                    return new Scp173TantrumAbility(Player, scp173TantrumAbility);
+
+                case PlayerRoles.PlayableScps.Scp173.Scp173TeleportAbility scp173TeleportAbility:
+                    return new Scp173TeleportAbility(Player, scp173TeleportAbility);
+
+                case PlayerRoles.PlayableScps.Scp173.Scp173BlinkTimer scp173BlinkTimer:
+                    return new Scp173Blink(Player, scp173BlinkTimer);
                 #endregion
 
                 default:

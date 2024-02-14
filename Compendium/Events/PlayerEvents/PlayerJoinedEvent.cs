@@ -1,13 +1,11 @@
 ﻿using Compendium.API;
 
-using System;
-
 namespace Compendium.Events.PlayerEvents
 {
+    [EventDelegates(typeof(PlayerDelegates))]
     public class PlayerJoinedEvent : Event
     {
-        public static event Action<PlayerJoiningEvent> OnEvent;
-
+        [EventProperty]
         public Player Player { get; }
 
         public PlayerJoinedEvent(Player player)

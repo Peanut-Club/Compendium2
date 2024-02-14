@@ -28,6 +28,8 @@ namespace Compendium.API.Roles.Scp079
             Tier = GetRoutine<Scp079Tier>();
             Signal = GetRoutine<Scp079Signal>();
             Camera = GetRoutine<Scp079CameraManager>();
+            MapAbility = GetRoutine<Scp079MapAbility>();
+            PingAbility = GetRoutine<Scp079PingAbility>();
             TeslaAbility = GetRoutine<Scp079TeslaAbility>();
             SpeakerAbility = GetRoutine<Scp079SpeakerAbility>();
             DoorLockAbility = GetRoutine<Scp079DoorLockAbility>();
@@ -43,6 +45,8 @@ namespace Compendium.API.Roles.Scp079
 
         public SubroutineManager Subroutines { get; }
 
+        public Scp079MapAbility MapAbility { get; }
+        public Scp079PingAbility PingAbility { get; }
         public Scp079TeslaAbility TeslaAbility { get; }
         public Scp079SpeakerAbility SpeakerAbility { get; }
         public Scp079DoorLockAbility DoorLockAbility { get; }
@@ -69,6 +73,11 @@ namespace Compendium.API.Roles.Scp079
         {
             get => Tier.Tier;
             set => Tier.Tier = value;
+        }
+
+        public Scp079PingType SyncedPing
+        {
+            get => PingAbility.SyncedPing;
         }
 
         public int LevelNumber
@@ -99,6 +108,16 @@ namespace Compendium.API.Roles.Scp079
         {
             get => Aux.Maximum;
             set => Aux.Maximum = value;
+        }
+
+        public bool IsMapOpened
+        {
+            get => MapAbility.IsOpened;
+        }
+
+        public bool IsSignalLost
+        {
+            get => Signal.IsLost;
         }
 
         public void RegenerateAux()

@@ -14,7 +14,7 @@ namespace Compendium.Events
     {
         private static readonly LockedDictionary<Type, EventInfo> knownEvents = new LockedDictionary<Type, EventInfo>();
 
-        public static LogOutput Log { get; } = new LogOutput("Event Manager");
+        public static LogOutput Log { get; } = new LogOutput("Event Manager").Setup();
 
         #region Event Invocation
         public static bool InvokeBool<T>(T ev, bool isAllowed)
@@ -189,9 +189,10 @@ namespace Compendium.Events
                     continue;
 
                 var hasPatch = type.HasAttribute<EventPatchAttribute>(out var eventPatchAttribute);
-                var delegateEvent = type.Event("OnEvent");
+                var hasDelegate = type.HasAttribute<EventDelegatesAttribute>(out var eventDelegatesAttribute);
 
                 PatchInfo patch = null;
+                System.Reflection.EventInfo evInfo = null;
 
                 if (hasPatch)
                 {
@@ -224,6 +225,36 @@ namespace Compendium.Events
                         patchAttribute.Type);
                 }
 
+                if (hasDelegate)
+                {
+                    if (eventDelegatesAttribute.Type is null)
+                    {
+                        Log.Warn($"Event Delegate type of event '{type.Name}' is null!");
+                        hasDelegate = false;
+                    }
+                    else
+                    {
+                        var events = eventDelegatesAttribute.Type.GetAllEvents();
+
+                        for (int i = 0; i < events.Length; i++)
+                        {
+                            var genericType = events[i].EventHandlerType.GetFirstGenericType();
+
+                            if (genericType is null || genericType != type)
+                                continue;
+
+                            evInfo = events[i];
+                            break;
+                        }
+
+                        if (evInfo is null)
+                        {
+                            Log.Warn($"Event Delegate of event '{type.Name}' has not been found in type '{eventDelegatesAttribute.Type.FullName}'!");
+                            hasDelegate = false;
+                        }
+                    }
+                }
+
                 if (knownEvents.ContainsKey(type))
                 {
                     Log.Warn($"Tried to register a duplicate event: {type.Name}");
@@ -234,8 +265,7 @@ namespace Compendium.Events
                     type,
 
                     hasPatch ? patch : null,
-
-                    delegateEvent);
+                    hasDelegate ? evInfo : null);
 
                 Log.Verbose($"Registered event: {type.FullName}");
             }

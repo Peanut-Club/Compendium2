@@ -1,7 +1,7 @@
 ﻿using Common.Utilities;
 using Common.Values;
 
-namespace Compendium.API
+namespace Compendium.API.Core
 {
     public class Wrapper<T> : Disposable, IWrapper<T>
     {
