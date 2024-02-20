@@ -1,7 +1,6 @@
 ﻿using Compendium.API.Core;
 using Compendium.API.Enums;
 using Compendium.API.Extensions;
-using Compendium.API.Utilities;
 
 using PlayerStatsSystem;
 using PlayerRoles.PlayableScps.Scp3114;
@@ -49,7 +48,7 @@ namespace Compendium.API
         public Player Attacker
         {
             get => Player.Get((Base as AttackerDamageHandler)?.Attacker.Hub);
-            set => (Base as AttackerDamageHandler)!.Attacker = new Footprinting.Footprint(value.Base);
+            set => (Base as AttackerDamageHandler)!.Attacker = new Footprint(value.Base);
         }
 
         public Vector3 Velocity
@@ -214,7 +213,10 @@ namespace Compendium.API
                         }
                         else
                         {
-                            handlerBase = new UniversalDamageHandler(damage, DeathTranslations.TranslationsById[(byte)type]);
+                            if (attacker != null)
+                                handlerBase = new ScpDamageHandler(attacker.Base, damage, DeathTranslations.TranslationsById[(byte)type]);
+                            else
+                                handlerBase = new UniversalDamageHandler(damage, DeathTranslations.TranslationsById[(byte)type]);
                         }
 
                         break;

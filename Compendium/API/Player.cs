@@ -39,7 +39,6 @@ using Mirror.LiteNetLib4Mirror;
 using CustomPlayerEffects;
 
 using CentralAuth;
-using Compendium.API.Networking;
 
 namespace Compendium.API
 {
@@ -78,22 +77,23 @@ namespace Compendium.API
 
             Base = hub;
             GameObject = hub.gameObject;
+
             Identity = Identity.Get(hub.networkIdentity);
-
             UserId = new UserIdValue(Base.authManager.UserId);
-
             Peer = LiteNetLib4MirrorServer.Peers[ConnectionId];
-
-            if (Base.authManager.AuthenticationResponse.AuthToken != null)
-                AuthToken = new Tokens.AuthToken(Base.authManager.AuthenticationResponse.SignedAuthToken, Base.authManager.AuthenticationResponse.AuthToken);
-
-            if (Base.authManager.AuthenticationResponse.BadgeToken != null)
-                BadgeToken = new Tokens.BadgeToken(Base.authManager.AuthenticationResponse.SignedBadgeToken, Base.authManager.AuthenticationResponse.BadgeToken);
 
             Stats = Add<StatManager>();
             Subroutines = Add<SubroutineManager>();
 
             UpdateRole();
+
+            #region Tokens
+            if (Base.authManager.AuthenticationResponse.AuthToken != null)
+                AuthToken = new Tokens.AuthToken(Base.authManager.AuthenticationResponse.SignedAuthToken, Base.authManager.AuthenticationResponse.AuthToken);
+
+            if (Base.authManager.AuthenticationResponse.BadgeToken != null)
+                BadgeToken = new Tokens.BadgeToken(Base.authManager.AuthenticationResponse.SignedBadgeToken, Base.authManager.AuthenticationResponse.BadgeToken);
+            #endregion
 
             players.Add(this);
         }
@@ -464,7 +464,10 @@ namespace Compendium.API
 
         internal void UpdateRole()
         {
-            Role = Role.Create(Base.roleManager.CurrentRole);
+            if (Role != null && Role is IDisposable disposable)
+                disposable.Dispose();
+
+            Role = Role.CreateRole(Base.roleManager.CurrentRole);
 
             if (Role is IFirstPersonRole firstPersonRole)
             {

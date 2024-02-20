@@ -54,15 +54,15 @@ namespace Compendium.API.Utilities
 
         public static bool ServerSendSync<TRoutine>(this ReferenceHub player, ReferenceHub routineOwner = null, NetworkWriter routineData = null, RoleTypeId? role = null, int routineIndex = -1) where TRoutine : SubroutineBase
         {
+            routineOwner ??= player;
+
+            if (routineOwner is null)
+                return false;
+
             if (routineIndex < 0)
                 routineIndex = GetSyncIndex<TRoutine>();
 
             if (routineIndex < 0)
-                return false;
-
-            routineOwner ??= player;
-
-            if (routineOwner is null)
                 return false;
 
             role ??= routineOwner.GetRoleId();
@@ -103,10 +103,7 @@ namespace Compendium.API.Utilities
         internal static void ReloadIndexes()
         {
             if (SubroutineIndexes != null)
-            {
-                CameraUtils.InitRound();
                 return;
-            }
 
             Log.Verbose($"Reloading subroutine indexes ..");
 
@@ -156,10 +153,6 @@ namespace Compendium.API.Utilities
                 ReferenceHub.HostHub.roleManager.ServerSetRole(RoleTypeId.None, RoleChangeReason.RemoteAdmin, RoleSpawnFlags.None);
             }
             catch { }
-
-            yield return Timing.WaitForSeconds(0.1f);
-
-            CameraUtils.InitRound();
         }
     }
 }

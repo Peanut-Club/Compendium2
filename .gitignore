@@ -4,6 +4,5 @@
 
 /.vs/Compendium2
 /packages
-/API/bin/Debug
-/API/obj
 /Compendium/bin
+/Compendium/obj

@@ -4,6 +4,7 @@ using Common.Values;
 using Compendium.API.Modules;
 using Compendium.API.Stats.ArtificialHealth;
 using Compendium.API.Stats;
+using Compendium.API.Enums;
 
 using System.Collections.Generic;
 using System;
@@ -37,7 +38,6 @@ namespace Compendium.API.GameModules.Stats
             Base = Player.Base.playerStats;
 
             RefreshStats();
-
             return null;
         }
 
@@ -54,7 +54,6 @@ namespace Compendium.API.GameModules.Stats
             }
 
             Stats = stats.AsReadOnly();
-
             ListPool<IStat>.Shared.Return(stats);
         }
 

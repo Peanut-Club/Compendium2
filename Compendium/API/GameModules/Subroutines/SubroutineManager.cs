@@ -6,30 +6,33 @@ using Compendium.API.Modules;
 
 using Compendium.API.Roles.Abilities;
 
-using Compendium.API.Roles.Scp0492.Abilities;
+using Compendium.API.Roles.Scp0492Api.Abilities;
 
-using Compendium.API.Roles.Scp079;
-using Compendium.API.Roles.Scp079.Abilities;
+using Compendium.API.Roles.Scp079Api;
+using Compendium.API.Roles.Scp079Api.Abilities;
 
-using Compendium.API.Roles.Scp096.Abilities;
-using Compendium.API.Roles.Scp106;
-using Compendium.API.Roles.Scp106.Abilities;
-using Compendium.API.Roles.Scp173;
-using Compendium.API.Roles.Scp173.Abilities;
+using Compendium.API.Roles.Scp096Api.Abilities;
+
+using Compendium.API.Roles.Scp106Api;
+using Compendium.API.Roles.Scp106Api.Abilities;
+
+using Compendium.API.Roles.Scp173Api;
+using Compendium.API.Roles.Scp173Api.Abilities;
+using Compendium.API.Roles.Scp3114Api.Abilites;
 using PlayerRoles.PlayableScps.Scp049;
 using PlayerRoles.PlayableScps.Scp049.Zombies;
 
 using PlayerRoles.PlayableScps.Scp079;
 using PlayerRoles.PlayableScps.Scp079.Cameras;
 using PlayerRoles.PlayableScps.Scp079.Map;
-
+using PlayerRoles.PlayableScps.Scp3114;
 using PlayerRoles.Subroutines;
 
 using System;
 using System.Collections.Generic;
 
-using Scp079SpeakerAbility = Compendium.API.Roles.Scp079.Abilities.Scp079SpeakerAbility;
-using Scp079TeslaAbility = Compendium.API.Roles.Scp079.Abilities.Scp079TeslaAbility;
+using Scp079SpeakerAbility = Compendium.API.Roles.Scp079Api.Abilities.Scp079SpeakerAbility;
+using Scp079TeslaAbility = Compendium.API.Roles.Scp079Api.Abilities.Scp079TeslaAbility;
 
 namespace Compendium.API.GameModules.Subroutines
 {
@@ -199,6 +202,9 @@ namespace Compendium.API.GameModules.Subroutines
 
         private void OnUpdate()
         {
+            if (Subroutines is null || Subroutines.Count < 1)
+                return;
+            
             for (int i = 0; i < SubroutineCount; i++)
             {
                 if (Subroutines[i] is ICustomSubroutine customSubroutine)
@@ -228,36 +234,24 @@ namespace Compendium.API.GameModules.Subroutines
             {
                 #region SCP-049
                 case Scp049AttackAbility scp049AttackAbility:
-                    return new Roles.Scp049.Abilities.Scp049AttackAbility(Player, scp049AttackAbility);
+                    return new Roles.Scp049Api.Abilities.Scp049AttackAbility(Player, scp049AttackAbility);
 
                 case Scp049CallAbility scp049CallAbility:
-                    return new Roles.Scp049.Abilities.Scp049CallAbility(Player, scp049CallAbility);
+                    return new Roles.Scp049Api.Abilities.Scp049CallAbility(Player, scp049CallAbility);
 
                 case Scp049ResurrectAbility scp049ResurrectAbility:
-                    return new Roles.Scp049.Abilities.Scp049ResurrectAbility(Player, scp049ResurrectAbility);
+                    return new Roles.Scp049Api.Abilities.Scp049ResurrectAbility(Player, scp049ResurrectAbility);
 
                 case Scp049SenseAbility scp049SenseAbility:
-                    return new Roles.Scp049.Abilities.Scp049SenseAbility(Player, scp049SenseAbility);
-
-                case Scp049ResurrectIndicators scp049ResurrectIndicators:
-                    return new AbilityWrapper<Scp049ResurrectIndicators>(Player, scp049ResurrectIndicators);
+                    return new Roles.Scp049Api.Abilities.Scp049SenseAbility(Player, scp049SenseAbility);
                 #endregion
 
                 #region SCP-049-2
-                case ZombieAttackAbility zombieAttackAbility:
-                    return new AbilityWrapper<ZombieAttackAbility>(Player, zombieAttackAbility);
-
-                case ZombieConsumeAbility zombieConsumeAbility:
-                    return new AbilityWrapper<ZombieConsumeAbility>(Player, zombieConsumeAbility);
-
                 case ZombieAudioPlayer zombieAudioPlayer:
                     return new Scp0492AudioPlayer(Player, zombieAudioPlayer);
 
                 case ZombieBloodlustAbility zombieBloodlustAbility:
                     return new Scp0492BloodlustAbility(Player, zombieBloodlustAbility);
-
-                case ZombieIndicatorTracker zombieIndicatorTracker:
-                    return new AbilityWrapper<ZombieIndicatorTracker>(Player, zombieIndicatorTracker);
                 #endregion
 
                 #region SCP-079
@@ -272,12 +266,6 @@ namespace Compendium.API.GameModules.Subroutines
 
                 case Scp079DoorLockChanger scp079DoorLockChanger:
                     return new Scp079DoorLockAbility(Player, scp079DoorLockChanger);
-
-                case Scp079DoorLockReleaser scp079DoorLockReleaser:
-                    return new AbilityWrapper<Scp079DoorLockReleaser>(Player, scp079DoorLockReleaser);
-
-                case Scp079DoorStateChanger scp079DoorStateChanger:
-                    return new AbilityWrapper<Scp079DoorStateChanger>(Player, scp079DoorStateChanger);
 
                 case Scp079ElevatorStateChanger scp079ElevatorStateChanger:
                     return new Scp079ElevatorUseAbility(Player, scp079ElevatorStateChanger);
@@ -312,15 +300,6 @@ namespace Compendium.API.GameModules.Subroutines
                 case Scp079CurrentCameraSync scp079CurrentCameraSync:
                     return new Scp079CameraManager(Player, scp079CurrentCameraSync);
 
-                case Scp079ForwardCameraSelector scp079ForwardCameraSelector:
-                    return new AbilityWrapper<Scp079ForwardCameraSelector>(Player, scp079ForwardCameraSelector);
-
-                case Scp079OverconCameraSelector scp079OverconCameraSelector:
-                    return new AbilityWrapper<Scp079OverconCameraSelector>(Player, scp079OverconCameraSelector);
-
-                case Scp079DirectionalCameraSelector scp079DirectionalCameraSelector:
-                    return new AbilityWrapper<Scp079DirectionalCameraSelector>(Player, scp079DirectionalCameraSelector);
-
                 case Scp079MapToggler scp079MapToggler:
                     return new Scp079MapAbility(Player, scp079MapToggler);
                 #endregion
@@ -340,15 +319,6 @@ namespace Compendium.API.GameModules.Subroutines
 
                 case PlayerRoles.PlayableScps.Scp096.Scp096TryNotToCryAbility scp096TryNotToCryAbility:
                     return new Scp096TryNotToCryAbility(Player, scp096TryNotToCryAbility);
-
-                case PlayerRoles.PlayableScps.Scp096.Scp096RageCycleAbility scpa096RageCycleAbility:
-                    return new AbilityWrapper<PlayerRoles.PlayableScps.Scp096.Scp096RageCycleAbility>(Player, scpa096RageCycleAbility);
-
-                case PlayerRoles.PlayableScps.Scp096.Scp096RageManager scp096RageManager:
-                    return new AbilityWrapper<PlayerRoles.PlayableScps.Scp096.Scp096RageManager>(Player, scp096RageManager);
-
-                case PlayerRoles.PlayableScps.Scp096.Scp096TargetsTracker scp096TargetsTracker:
-                    return new AbilityWrapper<PlayerRoles.PlayableScps.Scp096.Scp096TargetsTracker>(Player, scp096TargetsTracker);
                 #endregion
 
                 #region SCP-106
@@ -383,6 +353,17 @@ namespace Compendium.API.GameModules.Subroutines
 
                 case PlayerRoles.PlayableScps.Scp173.Scp173BlinkTimer scp173BlinkTimer:
                     return new Scp173Blink(Player, scp173BlinkTimer);
+                #endregion
+
+                #region SCP-3114
+                case Scp3114Dance scp3114Dance:
+                    return new Scp3114DanceAbility(Player, scp3114Dance);
+
+                case Scp3114Disguise scp3114Disguise:
+                    return new Scp3114DisguiseAbility(Player, scp3114Disguise);
+
+                case Scp3114Strangle scp3114Strangle:
+                    return new Scp3114StrangleAbility(Player, scp3114Strangle);
                 #endregion
 
                 default:

@@ -2,6 +2,8 @@
 
 using System;
 
+using Compendium.API.Enums;
+
 namespace Compendium.API.Tokens
 {
     public class BadgeToken : IToken

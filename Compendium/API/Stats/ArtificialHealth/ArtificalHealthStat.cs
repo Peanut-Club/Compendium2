@@ -3,6 +3,7 @@
 using PlayerStatsSystem;
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using UnityEngine;
@@ -32,6 +33,12 @@ namespace Compendium.API.Stats.ArtificialHealth
             var process = new ArtificialHealthProcess(amount, limit, decay, efficacy, sustain, isPersistent);
 
             AddNewProcess(process.Base);
+
+            var processes = ListPool<ArtificialHealthProcess>.Shared.Rent(Processes);
+
+            processes.Add(process);
+
+            Processes = processes.AsReadOnly();
 
             process.OnAdded();
 

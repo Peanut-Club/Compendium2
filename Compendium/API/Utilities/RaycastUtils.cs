@@ -21,9 +21,7 @@ namespace Compendium.API.Utilities
         public static Vector3 GetForwardCastPosition(this ReferenceHub hub)
         {
             var hubPos = hub.transform.position;
-
             hubPos.x += 0.15f;
-
             return hubPos;
         }
 
@@ -117,7 +115,6 @@ namespace Compendium.API.Utilities
                 triggerInteraction);
 
             onFinished = () => ArrayPool<RaycastHit>.Shared.Return(hitsNonAlloc);
-
             return hitsNonAlloc;
         }
     }

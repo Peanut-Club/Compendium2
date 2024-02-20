@@ -15,7 +15,6 @@ namespace Compendium.API.Utilities
         {
             cam.VerticalAxis.TargetValue = rotation.x;
             cam.HorizontalAxis.TargetValue = rotation.y;
-
             return cam.TrySyncCamera();
         }
 
@@ -29,12 +28,9 @@ namespace Compendium.API.Utilities
             var writer = NetworkWriterPool.Get();
 
             writer.WriteUShort(camera.SyncId);
-
             camera.WriteAxes(writer);
 
-            SubroutineUtils.ServerSendSync<Scp079CameraRotationSync>(compHub, compHub, writer, RoleTypeId.Scp079);
-
-            return true;
+            return SubroutineUtils.ServerSendSync<Scp079CameraRotationSync>(compHub, compHub, writer, RoleTypeId.Scp079);
         }
     }
 }

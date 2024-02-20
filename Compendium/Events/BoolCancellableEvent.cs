@@ -2,7 +2,7 @@
 {
     public class BoolCancellableEvent : CancellableEvent<bool>
     {
-        public override bool AllowedValue { get; } = true;
-        public override bool CancelledValue { get; } = false;
+        internal override bool AllowedValue { get; } = true;
+        internal override bool CancelledValue { get; } = false;
     }
 }

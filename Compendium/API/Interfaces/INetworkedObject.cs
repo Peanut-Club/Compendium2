@@ -1,10 +1,8 @@
-﻿using Compendium.API.Networking;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Compendium.API.Interfaces
 {
-    public interface INetworkedObject : IWorldObject<Vector3, Quaternion>
+    public interface INetworkedObject : IWorldObject<Quaternion>
     {
         Vector3 Position { set; }
         Quaternion Rotation { set; }

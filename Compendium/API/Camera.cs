@@ -1,7 +1,7 @@
 ﻿using Compendium.API.Core;
 using Compendium.API.Enums;
 using Compendium.API.Interfaces;
-using Compendium.API.Roles.Scp079;
+using Compendium.API.Roles.Scp079Api;
 using Compendium.API.Utilities;
 
 using MapGeneration;
