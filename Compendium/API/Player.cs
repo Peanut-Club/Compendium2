@@ -244,6 +244,11 @@ namespace Compendium.API
             get => Identity.Id;
         }
 
+        public float MovementSpeed
+        {
+            get => (FirstPerson?.Motor?.Base?.Velocity ?? Vector3.zero).magnitude;
+        }
+
         public float InfoViewRange
         {
             get => Base.nicknameSync.NetworkViewRange;

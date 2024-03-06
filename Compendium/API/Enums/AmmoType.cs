@@ -2,6 +2,8 @@
 {
     public enum AmmoType : int
     {
+        None = -1,
+
         Ammo12gauge = 19,
         Ammo44cal = 27,
         Ammo556x45 = 22,

@@ -77,5 +77,15 @@ namespace Compendium.API.GameModules.FirstPerson
         {
             get => Settings.SkinWidth;
         }
+
+        public bool IsGrounded
+        {
+            get => Base.IsGrounded;
+        }
+
+        public bool IsMoving
+        {
+            get => Base.Motor.MovementDetected;
+        }
     }
 }

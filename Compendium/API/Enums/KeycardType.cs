@@ -2,6 +2,8 @@
 {
     public enum KeycardType
     {
+        None = -1,
+
         Janitor,
         Scientist,
         Researcher,

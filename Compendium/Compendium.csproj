@@ -83,6 +83,8 @@
     <Compile Include="API\DamageHandler.cs" />
     <Compile Include="API\Enums\AmmoType.cs" />
     <Compile Include="API\Enums\ArmorType.cs" />
+    <Compile Include="API\Enums\AttachmentType.cs" />
+    <Compile Include="API\Enums\CoinSide.cs" />
     <Compile Include="API\Enums\DamageType.cs" />
     <Compile Include="API\Enums\KeycardType.cs" />
     <Compile Include="API\Enums\Scp096AttackType.cs" />
@@ -94,6 +96,8 @@
     <Compile Include="API\Enums\Scp939LungeState.cs" />
     <Compile Include="API\Enums\WeaponType.cs" />
     <Compile Include="API\Enums\WorldObjectType.cs" />
+    <Compile Include="API\Extensions\AttachmentExtensions.cs" />
+    <Compile Include="API\Extensions\BodyArmorExtensions.cs" />
     <Compile Include="API\Extensions\DamageExtensions.cs" />
     <Compile Include="API\Extensions\Scp079PingExtensions.cs" />
     <Compile Include="API\Interfaces\INetworkedObject.cs" />
@@ -102,6 +106,14 @@
     <Compile Include="API\Identity.cs" />
     <Compile Include="API\Inventory\InventoryItem.cs" />
     <Compile Include="API\Inventory\InventoryManager.cs" />
+    <Compile Include="API\Inventory\Items\Armors\CombatBodyArmorItem.cs" />
+    <Compile Include="API\Inventory\Items\Armors\HeavyBodyArmorItem.cs" />
+    <Compile Include="API\Inventory\Items\Armors\LightBodyArmorItem.cs" />
+    <Compile Include="API\Inventory\Items\BodyArmorItem.cs" />
+    <Compile Include="API\Inventory\Items\FirearmItem.cs" />
+    <Compile Include="API\Inventory\Items\Firearms\Modules\CustomActionModule.cs" />
+    <Compile Include="API\Inventory\Items\Firearms\Modules\CustomAmmoManager.cs" />
+    <Compile Include="API\Inventory\Items\Firearms\Modules\WrappedAmmoManager.cs" />
     <Compile Include="API\Roles\Abilities\VigorAbility.cs" />
     <Compile Include="API\Roles\FilmmakerRole.cs" />
     <Compile Include="API\Roles\HumanRole.cs" />
@@ -211,8 +223,10 @@
     <Compile Include="API\Enums\UserIdType.cs" />
     <Compile Include="API\UserIdValue.cs" />
     <Compile Include="API\Extensions\ItemTypeExtensions.cs" />
+    <Compile Include="API\Utilities\AttachmentUtils.cs" />
     <Compile Include="API\Utilities\CameraUtils.cs" />
     <Compile Include="API\Utilities\CustomInfoUtils.cs" />
+    <Compile Include="API\Utilities\InventoryUtils.cs" />
     <Compile Include="API\Utilities\SubroutineUtils.cs" />
     <Compile Include="API\Utilities\ClientRotation.cs" />
     <Compile Include="API\Utilities\RaycastUtils.cs" />

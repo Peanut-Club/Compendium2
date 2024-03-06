@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Compendium.API.GameModules.FirstPerson;
+
+using UnityEngine;
 
 namespace Compendium.API.Utilities
 {
@@ -32,5 +34,17 @@ namespace Compendium.API.Utilities
 
         public ClientRotation(Vector3 rotation)
             : this(new Quaternion(rotation.x, rotation.y, rotation.z, 0f)) { }
+
+        public bool Apply(Player player)
+            => Apply(player.FirstPerson?.Camera);
+
+        public bool Apply(FirstPersonCamera camera)
+        {
+            if (camera is null)
+                return false;
+
+            camera.ClientRotation = this;
+            return true;
+        }
     }
 }
